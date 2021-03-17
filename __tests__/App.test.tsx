@@ -6,5 +6,5 @@ import App from '../src/App';
 
 it('should render the application', () => {
   const component = render(<MemoryRouter><App /></MemoryRouter>);
-  expect(component.html()).toMatch(/TableCheck Weather-app/i);
+  expect(component.html()).toMatch(/Please enable location services/i);
 })
