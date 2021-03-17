@@ -5,5 +5,11 @@
 - [x] Set up repo with razzle
 - [x] convert project to use typescript
 - [x] Install xState
-- [ ] Install Jest/Enzyme
+- [x] Install Jest/Enzyme
+- [ ] Clear razzle dummy html/css
+- [ ] get font and icons and emotion
+- [ ] get user geolocation
+- [ ] install axios
+- [ ] query weather api for data
+- [ ] display data, refresh every 5 minutes
 ...
