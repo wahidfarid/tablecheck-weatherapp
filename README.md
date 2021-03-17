@@ -6,7 +6,7 @@
 - [x] convert project to use typescript
 - [x] Install xState
 - [x] Install Jest/Enzyme
-- [ ] Clear razzle dummy html/css
+- [x] Clear razzle dummy html/css
 - [ ] get font and icons and emotion
 - [ ] get user geolocation
 - [ ] install axios

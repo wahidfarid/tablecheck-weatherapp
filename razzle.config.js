@@ -87,6 +87,10 @@ module.exports = {
     paths, // the modified paths that will be used by Razzle.
   }) {
     // Do some stuff...
+    jestConfig.testMatch = [
+      "**/__tests__/*.(ts|tsx|js)"
+    ];
+    jestConfig.setupFiles = ["<rootDir>/test-setup.js"];
     return jestConfig;
   },
 };
