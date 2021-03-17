@@ -7,9 +7,13 @@
 - [x] Install xState
 - [x] Install Jest/Enzyme
 - [x] Clear razzle dummy html/css
-- [ ] get font and icons and emotion
+- [x] get font and icons and emotion
+- [ ] wireframe design
 - [ ] get user geolocation
 - [ ] install axios
 - [ ] query weather api for data
 - [ ] display data, refresh every 5 minutes
+
+### Future nice to haves
+- [ ] Only import needed icons from weather-icons
 ...

@@ -1,0 +1,26 @@
+@import 'normalize.css';
+@import 'font-league-gothic.css';
+@import '../assets/weather-icons/css/weather-icons.min.css';
+
+html{
+  font-size: 10px;
+  font-family: "league-gothic",sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+body{
+  font-size: 2.2rem;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+*{
+  box-sizing: border-box;
+}
+
+h1{
+  font-size: 4.8rem;
+  font-weight: 400;
+}
