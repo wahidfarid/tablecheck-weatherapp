@@ -1,5 +1,12 @@
 # TableCheck interview task : Weather-app
 
+## Description
+
+## Comments
+
+- normalize.css is used for it's superior browser support (which is needed because we are targeting IE 11). The catch is it's a bit old and janky. i had to write some code in `global-styles.css` regarding `html` and `body` that i probably wouldn't have needed if i used a better CSS reset
+
+### wireframe
 ### Checklist
 
 - [x] Set up repo with razzle

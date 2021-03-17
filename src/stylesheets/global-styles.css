@@ -1,26 +1,30 @@
+/* Reset styles */
+/* Normalize is a bit old but has best old browser support */
 @import 'normalize.css';
+/* Import font */
 @import 'font-league-gothic.css';
+/* Import weather icon fonrs */
 @import '../assets/weather-icons/css/weather-icons.min.css';
 
+/* Basic global styling */
 html{
   font-size: 10px;
   font-family: "league-gothic",sans-serif;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  overflow-y: hidden;
+  min-height: 100vh;
 }
 body{
   font-size: 2.2rem;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  height: 100%;
+  min-height: 100vh;
 }
 
 *{
   box-sizing: border-box;
-}
-
-h1{
-  font-size: 4.8rem;
-  font-weight: 400;
 }
