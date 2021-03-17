@@ -3,7 +3,7 @@
 ### Checklist
 
 - [x] Set up repo with razzle
-- [ ] convert project to use typescript
-- [ ] Install xState
+- [x] convert project to use typescript
+- [x] Install xState
 - [ ] Install Jest/Enzyme
 ...
