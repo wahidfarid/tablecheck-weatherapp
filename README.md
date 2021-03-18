@@ -36,6 +36,7 @@
 - [ ] Crossbrowser testing confirmation
 - [ ] Only import needed icons from weather-icons
 - [ ] Cache and/or render cached weather through SSR
+- [ ] Refactor WeatherMachine into smaller actors
 - [ ] Page insights testing
 - [ ] E2E testing
 ...
