@@ -30,6 +30,7 @@
 - [ ] refresh every 5 minutes
 - [ ] get data for url querystring (comma seperated)
 - [ ] animated backgrounds
+- [ ] fade animations between refreshes
 
 ### Future nice to haves
 - [ ] Crossbrowser testing confirmation
