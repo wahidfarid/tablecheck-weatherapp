@@ -24,11 +24,16 @@ body{
   overflow-x: hidden;
   height: 100%;
   min-height: 100vh;
+  color: #fff;
 }
 
 #root{
   min-height: 100vh;
   height: 100%;
+}
+
+h1,h2,h3,h4,h5,h6{
+  font-weight: normal;
 }
 
 *{

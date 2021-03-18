@@ -41,7 +41,6 @@ const StartComponent = () => (
     </svg>
     <h1
       css={css`
-        font-weight: 400;
         text-align: center;
       `}
     >
