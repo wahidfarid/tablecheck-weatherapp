@@ -26,7 +26,7 @@
 - [x] get user geolocation
 - [x] install axios
 - [x] query weather api for data
-- [ ] display data, map data to icons
+- [x] display data, map data to icons
 - [ ] refresh every 5 minutes
 - [ ] get data for url querystring (comma seperated)
 - [ ] animated backgrounds
