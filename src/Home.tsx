@@ -6,6 +6,7 @@ import { Machine, State } from 'xstate';
 
 import WeatherMachine from './machines/WeatherMachine';
 import StartComponent from './Start';
+import DisplayComponent from './DisplayComponent';
 
 
 const  Home = ({}) => {  
@@ -13,9 +14,11 @@ const  Home = ({}) => {
   // Machine hooks
   const [current, send] = useMachine(WeatherMachine);
 
-  return <StartComponent/>
-  
-  {/* <i className="wi wi-day-sunny"></i> */}
+  let outputComponent = <StartComponent/>;
+  if(current.matches("display"))
+    outputComponent = <DisplayComponent/>;
+
+  return outputComponent;  
 
 }
 
