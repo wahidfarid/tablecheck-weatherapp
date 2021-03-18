@@ -1,5 +1,7 @@
 'use strict';
 module.exports = {
+  plugins: ['eslint'],
+  verbose: true,
   modifyOptions({
     webpackObject, // the imported webpack node module
     options: {
@@ -87,10 +89,8 @@ module.exports = {
     paths, // the modified paths that will be used by Razzle.
   }) {
     // Do some stuff...
-    jestConfig.testMatch = [
-      "**/__tests__/*.(ts|tsx|js)"
-    ];
-    jestConfig.setupFiles = ["<rootDir>/test-setup.js"];
+    jestConfig.testMatch = ['**/__tests__/*.(ts|tsx|js)'];
+    jestConfig.setupFiles = ['<rootDir>/test-setup.js'];
     return jestConfig;
   },
 };

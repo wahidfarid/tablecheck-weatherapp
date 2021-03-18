@@ -13,17 +13,23 @@ const syncLoadAssets = () => {
 syncLoadAssets();
 
 const cssLinksFromAssets = (assets, entrypoint) => {
-  return assets[entrypoint] ? assets[entrypoint].css ?
-  assets[entrypoint].css.map(asset=>
-    `<link rel="stylesheet" href="${asset}">`
-  ).join('') : '' : '';
+  return assets[entrypoint]
+    ? assets[entrypoint].css
+      ? assets[entrypoint].css
+          .map((asset) => `<link rel="stylesheet" href="${asset}">`)
+          .join('')
+      : ''
+    : '';
 };
 
 const jsScriptTagsFromAssets = (assets, entrypoint, extra = '') => {
-  return assets[entrypoint] ? assets[entrypoint].js ?
-  assets[entrypoint].js.map(asset=>
-    `<script src="${asset}"${extra}></script>`
-  ).join('') : '' : '';
+  return assets[entrypoint]
+    ? assets[entrypoint].js
+      ? assets[entrypoint].js
+          .map((asset) => `<script src="${asset}"${extra}></script>`)
+          .join('')
+      : ''
+    : '';
 };
 
 export const renderApp = (req: express.Request, res: express.Response) => {

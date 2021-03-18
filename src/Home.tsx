@@ -1,25 +1,23 @@
 /** @jsx jsx */
-import React, { useEffect } from 'react';
-import { css, jsx } from '@emotion/react';
+// eslint-disable-next-line no-use-before-define
+import React from 'react';
+import { jsx } from '@emotion/react';
 import { useMachine } from '@xstate/react';
-import { Machine, State } from 'xstate';
 
 import WeatherMachine from './machines/WeatherMachine';
 import StartComponent from './Start';
 import DisplayComponent from './DisplayComponent';
 
-
-const  Home = ({}) => {  
-
+const Home = () => {
   // Machine hooks
-  const [current, send] = useMachine(WeatherMachine);
+  const [current] = useMachine(WeatherMachine);
 
-  let outputComponent = <StartComponent/>;
-  if(current.matches("display"))
-    outputComponent = <DisplayComponent/>;
+  let outputComponent = <StartComponent />;
+  if (current.matches('display')) {
+    outputComponent = <DisplayComponent />;
+  }
 
-  return outputComponent;  
-
-}
+  return outputComponent;
+};
 
 export default Home;
