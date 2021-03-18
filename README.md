@@ -27,7 +27,7 @@
 - [x] install axios
 - [x] query weather api for data
 - [x] display data, map data to icons
-- [ ] refresh every 5 minutes
+- [x] refresh every 5 minutes
 - [ ] get data for url querystring (comma seperated)
 - [ ] animated backgrounds
 - [ ] fade animations between refreshes
