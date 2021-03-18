@@ -2,6 +2,8 @@
 // eslint-disable-next-line no-use-before-define
 import React from 'react';
 import { css, jsx } from '@emotion/react';
+import { useMachine } from '@xstate/react';
+import WeatherMachine from './machines/WeatherMachine';
 
 const containerStyle = css`
   padding: 3rem;
@@ -56,42 +58,48 @@ const minorIconStyles = css`
   margin: 0 2rem;
 `;
 
-const DisplayComponent = () => (
-  <div css={containerStyle}>
-    <div css={wrapperStyle}>
-      <h2 css={AreaTitleStyle}>London</h2>
-      <i className="wi wi-day-sunny" css={IconStyle}></i>
-      <div css={DividerStyle}></div>
-      <h3 css={TempratureStyle}>29°</h3>
-      <div>
-        <h4
-          css={css`
-            font-size: 4rem;
-            margin: 0;
-            /* text-align: right; */
-          `}
-        >
-          <i css={minorIconStyles} className="wi wi-raindrop"></i>15 %
-        </h4>
-        <h4
-          css={css`
-            font-size: 4rem;
-            margin: 0;
-            /* text-align: right; */
-          `}
-        >
-          <i css={minorIconStyles} className="wi wi-strong-wind"></i>40{' '}
-          <span
+const DisplayComponent = () => {
+  const [current] = useMachine(WeatherMachine);
+
+  return (
+    <div css={containerStyle}>
+      <div css={wrapperStyle}>
+        <h2 css={AreaTitleStyle}>{current.context.data.name}</h2>
+        <i className="wi wi-day-sunny" css={IconStyle}></i>
+        <div css={DividerStyle}></div>
+        <h3 css={TempratureStyle}>
+          {Math.round(current.context.data.temprature)}°
+        </h3>
+        <div>
+          <h4
             css={css`
-              font-size: 2rem;
+              font-size: 4rem;
+              margin: 0;
             `}
           >
-            km/h
-          </span>
-        </h4>
+            <i css={minorIconStyles} className="wi wi-raindrop"></i>
+            {current.context.data.humidity} %
+          </h4>
+          <h4
+            css={css`
+              font-size: 4rem;
+              margin: 0;
+            `}
+          >
+            <i css={minorIconStyles} className="wi wi-strong-wind"></i>
+            {current.context.data.wind}{' '}
+            <span
+              css={css`
+                font-size: 2rem;
+              `}
+            >
+              km/h
+            </span>
+          </h4>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default DisplayComponent;
