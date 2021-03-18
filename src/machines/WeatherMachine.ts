@@ -4,13 +4,11 @@ import { assign, Machine } from 'xstate';
 export const WeatherMachine = Machine({
   id: 'weather',
   initial: 'start',
+  context: {},
   states: {
     start: {
       invoke: {
-        id: 'getLocation',
-        src: (context, event)=> new Promise((resolve) => navigator.geolocation.getCurrentPosition((position)=>{
-          resolve({lat: position.coords.latitude, lng: position.coords.longitude});
-        })),
+        src: 'getLocation',
         onDone: {
           target: 'display',
           actions: assign({ coords: (context, event) => event.data })
@@ -25,7 +23,13 @@ export const WeatherMachine = Machine({
       entry: 'test'
     }
   }
-}, {
+},
+{
+  services: {
+    getLocation: (context, event)=> new Promise((resolve) => global.navigator.geolocation.getCurrentPosition((position)=>{
+      resolve({lat: position.coords.latitude, lng: position.coords.longitude});
+    }))
+  },
   actions:{
     test: (context, event)=>{
       console.log(context, "Hello from test action");
