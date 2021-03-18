@@ -3,7 +3,9 @@
 import React from 'react';
 import { css, jsx } from '@emotion/react';
 import { useMachine } from '@xstate/react';
+
 import WeatherMachine from './machines/WeatherMachine';
+import weatherIconsMap from './assets/weatherIconsMap.json';
 
 const containerStyle = css`
   padding: 3rem;
@@ -65,7 +67,10 @@ const DisplayComponent = () => {
     <div css={containerStyle}>
       <div css={wrapperStyle}>
         <h2 css={AreaTitleStyle}>{current.context.data.name}</h2>
-        <i className="wi wi-day-sunny" css={IconStyle}></i>
+        <i
+          className={`wi ${weatherIconsMap[current.context.data.icon]}`}
+          css={IconStyle}
+        ></i>
         <div css={DividerStyle}></div>
         <h3 css={TempratureStyle}>
           {Math.round(current.context.data.temprature)}°

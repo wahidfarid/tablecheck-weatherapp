@@ -8,6 +8,7 @@ export interface weatherMachineContext {
     temprature?: number;
     humidity?: number;
     wind?: number;
+    icon?: string;
   };
 }
 
@@ -72,6 +73,7 @@ export const WeatherMachine = machine<weatherMachineContext>(
                 humidity: response.data.main.humidity,
                 name: response.data.name,
                 wind: response.data.wind.speed,
+                icon: response.data.weather[0].icon,
               };
               resolve({ data });
             },
