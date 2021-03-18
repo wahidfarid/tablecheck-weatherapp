@@ -80,7 +80,14 @@ const DisplayComponent = () => (
             /* text-align: right; */
           `}
         >
-          <i css={minorIconStyles} className="wi wi-strong-wind"></i>40 <span css={css`font-size: 2rem;`}>km/h</span>
+          <i css={minorIconStyles} className="wi wi-strong-wind"></i>40{' '}
+          <span
+            css={css`
+              font-size: 2rem;
+            `}
+          >
+            km/h
+          </span>
         </h4>
       </div>
     </div>
