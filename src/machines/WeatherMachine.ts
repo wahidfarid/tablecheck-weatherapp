@@ -43,7 +43,14 @@ export const WeatherMachine = machine<weatherMachineContext>(
           },
         },
       },
-      display: {},
+      display: {
+        invoke: {
+          src: 'startTimer',
+        },
+        on: {
+          TICK: 'query',
+        },
+      },
     },
   },
   {
@@ -78,10 +85,18 @@ export const WeatherMachine = machine<weatherMachineContext>(
               resolve({ data });
             },
             (error) => {
-              console.log('Axios error', error);
+              console.log('Axios error:', error);
             }
           )
         ),
+      startTimer: (context, event) => (cb) => {
+        const interval = setInterval(() => {
+          cb('TICK');
+        }, 1000 * 60 * 5);
+        return () => {
+          clearInterval(interval);
+        };
+      },
     },
   }
 );

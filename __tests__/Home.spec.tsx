@@ -46,6 +46,11 @@ it('should request weather information successfully and transition to `display`'
     .start();
 });
 
+it('should update weather information periodically', (done) => {
+  expect(true).toBe(false);
+  done();
+});
+
 it.todo('should detect if a location is cached and valid');
 it.todo('should not ask the user if cached location is valid');
 it.todo('should ask the user for location if cache older than 5 minutes');

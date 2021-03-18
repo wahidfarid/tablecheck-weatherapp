@@ -13,7 +13,7 @@ const Home = () => {
   const [current] = useMachine(WeatherMachine);
 
   let outputComponent = <StartComponent />;
-  if (current.matches('display')) {
+  if (current.context.data.name) {
     outputComponent = <DisplayComponent />;
   }
 
