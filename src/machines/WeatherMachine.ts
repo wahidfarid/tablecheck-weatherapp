@@ -1,39 +1,77 @@
 import { assign, Machine } from 'xstate';
+import Axios from 'axios';
 
-// This machine is completely decoupled from React
-export const WeatherMachine = Machine({
+export interface weatherMachineContext {
+  coords: {lat?: number, lng?: number},
+  data: {
+    name?: string,
+    temprature?: number,
+    humidity?: number,
+    wind?: number
+  }
+}
+
+export const WeatherMachine = Machine<weatherMachineContext>({
   id: 'weather',
   initial: 'start',
-  context: {},
+  context: {
+    coords: {},
+    data: {}
+  },
   states: {
     start: {
       invoke: {
         src: 'getLocation',
         onDone: {
-          target: 'display',
+          target: 'query',
           actions: assign({ coords: (context, event) => event.data })
         },
         onError: {
           target: 'start',
-          actions: assign({ error: (context, event) => console.log(event.data)})
+          actions: (context, event) => alert(event.data),
         }
       }
     },
+    query: {
+      invoke:{
+        src:'getData',
+        onDone: {
+          target: 'display',
+          actions: assign((context, event)=> event.data)
+        }
+      } 
+    },
     display: {
-      entry: 'test'
+
     }
   }
 },
 {
   services: {
-    getLocation: (context, event)=> new Promise((resolve) => global.navigator.geolocation.getCurrentPosition((position)=>{
-      resolve({lat: position.coords.latitude, lng: position.coords.longitude});
-    }))
-  },
-  actions:{
-    test: (context, event)=>{
-      console.log(context, "Hello from test action");
-    }
+    getLocation: (context, event)=> new Promise((resolve) => {
+      
+      if(context.coords.lat)
+        resolve(context.coords);
+      
+      global.navigator.geolocation.getCurrentPosition((position)=>{
+        resolve({lat: position.coords.latitude, lng: position.coords.longitude});
+      });
+
+    }),
+
+    getData: (context, event)=> new Promise((resolve) =>
+      Axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${context.coords.lat}&lon=${context.coords.lng}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`).then((response)=>{
+        const data = {
+          temprature: response.data.main.temp,
+          humidity: response.data.main.humidity,
+          name: response.data.name,
+          wind: response.data.wind.speed
+        };
+        resolve({data});
+      }, (error)=>{
+        console.log("Axios error", error);
+      })
+    )
   }
 });
 

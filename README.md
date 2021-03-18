@@ -22,11 +22,12 @@
 - [x] get font and icons and emotion
 - [x] wireframe design
 - [x] get user geolocation
-- [ ] install axios
-- [ ] query weather api for data
+- [x] install axios
+- [x] query weather api for data
 - [ ] display data, map data to icons
 - [ ] refresh every 5 minutes
 
 ### Future nice to haves
 - [ ] Only import needed icons from weather-icons
+- [ ] Cache and/or render cached weather through SSR
 ...

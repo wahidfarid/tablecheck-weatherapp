@@ -1,30 +1,17 @@
 import React from 'react';
 import {render} from 'enzyme';
-import Home from '../src/Home';
-import WeatherMachine from '../src/machines/WeatherMachine';
 import { interpret } from 'xstate';
 
+import Home from '../src/Home';
+import WeatherMachine, {weatherMachineContext} from '../src/machines/WeatherMachine';
 
-it('should transition from start to display after running getLocation service', (done)=>{
 
-  interpret(WeatherMachine).onTransition((state) => {
-
-    if (state.matches('display')) {
-      expect(true).toBe(true);
-      done();
-    }else{
-      done(false);
-    }
-
-  }).start();
-});
+const expectedCoordinates = { coords: {latitude: 30.1531136, longitude: 31.185305599999996}};
 
 it("should use navigator to get current location", (done)=>{
 
-  const expected = { coords: {latitude: 30.1531136, longitude: 31.185305599999996}};
-
   global.navigator.geolocation.getCurrentPosition((position)=>{
-    expect(position).toStrictEqual(expected);
+    expect(position).toStrictEqual(expectedCoordinates);
     done();
   }, (error)=>{
     console.log(error);
@@ -32,6 +19,29 @@ it("should use navigator to get current location", (done)=>{
   });
 
 });
+
+it('should transition from `start` to `query` after running getLocation service', (done)=>{
+
+  interpret(WeatherMachine).onTransition((state) => {
+
+    if(state.matches('query')) {
+      expect(true).toBe(true);
+      done();
+    }
+
+  }).start();
+});
+
+it('should request weather information successfully and transition to `display`', (done)=>{
+
+  const customContext = {...expectedCoordinates, data:{}};
+  const machine = WeatherMachine.withContext(customContext as weatherMachineContext);  
+  interpret(machine).onTransition((state) =>{
+    if(state.matches('display')){
+      done();
+    }
+  }).start();
+})
 
 it.todo('should detect if a location is cached and valid');
 it.todo('should not ask the user if cached location is valid');
