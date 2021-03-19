@@ -47,8 +47,24 @@ it('should request weather information successfully and transition to `display`'
 });
 
 it('should update weather information periodically', (done) => {
-  expect(true).toBe(false);
-  done();
+  const customContext = { ...expectedCoordinates, data: {} };
+
+  const mockMachine = WeatherMachine.withContext(
+    customContext as weatherMachineContext
+  ).withConfig({
+    services: {
+      startTimer: (_, event) => (cb) => {
+        cb('TICK');
+        return () => {};
+      },
+    },
+  });
+
+  interpret(mockMachine)
+    .onEvent((event) => {
+      if (event.type == 'TICK') done();
+    })
+    .start();
 });
 
 it.todo('should detect if a location is cached and valid');
