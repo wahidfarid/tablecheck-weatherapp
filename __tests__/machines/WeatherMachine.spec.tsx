@@ -1,4 +1,3 @@
-import { useLocation } from 'react-router-dom';
 import { interpret } from 'xstate';
 
 import WeatherMachine, {
@@ -43,18 +42,18 @@ describe('Start State', () => {
 
     const searchParams = new URLSearchParams(window.URL.toString()).get('city');
     if (!searchParams) service.send('GEOLOCATION');
-    else service.send('QUERY', { cities: searchParams.split(',') });
+    else
+      service.send('QUERY', {
+        cities: searchParams.split(',').map((name) => {
+          return { name };
+        }),
+      });
   });
 });
 
 describe('Geolocation State', () => {
   it('should request weather information by location successfully and transition to `display`', (done) => {
-    const customContext = { ...expectedCoordinates, data: {}, cities: [] };
-    const machine = WeatherMachine.withContext(
-      customContext as weatherMachineContext
-    );
-
-    interpret(machine)
+    interpret(WeatherMachine)
       .onTransition((state) => {
         if (state.matches('display')) {
           done();
@@ -68,14 +67,19 @@ describe('Geolocation State', () => {
     const service = interpret(WeatherMachine)
       .onTransition((state) => {
         if (state.matches('display')) {
-          expect(state.context.data.name).toBe('Cairo');
+          expect(state.context.cities[0].data.name).toBe('Cairo');
           done();
         }
       })
       .start();
 
-    const searchParams = new URLSearchParams(window.URL.toString()).get('city');
-    service.send('QUERY', { cities: searchParams.split(',') });
+    const cities = new URLSearchParams(window.URL.toString())
+      .get('city')
+      .split(',')
+      .map((name) => {
+        return { name };
+      });
+    service.send('QUERY', { cities });
   });
 
   it('should iterate through list of cities in querystrings and call each one consecutively', () => {
@@ -85,7 +89,18 @@ describe('Geolocation State', () => {
 
 describe('Display State', () => {
   it('should update weather information periodically', (done) => {
-    const customContext = { ...expectedCoordinates, data: {}, cities: [] };
+    const customContext = {
+      cities: [
+        {
+          coords: {
+            lat: expectedCoordinates.coords.latitude,
+            lng: expectedCoordinates.coords.longitude,
+          },
+          data: {},
+        },
+      ],
+      currentCityIndex: 0,
+    };
     const mockMachine = WeatherMachine.withConfig({
       services: {
         startTimer: (_, event) => (cb) => {

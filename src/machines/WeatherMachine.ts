@@ -2,15 +2,18 @@ import { assign, Machine as machine } from 'xstate';
 import Axios from 'axios';
 
 export interface weatherMachineContext {
-  coords: { lat?: number; lng?: number };
-  data: {
+  cities: {
+    coords: { lat: number; lng: number };
     name?: string;
-    temprature?: number;
-    humidity?: number;
-    wind?: number;
-    icon?: string;
-  };
-  cities: string[];
+    data: {
+      name?: string;
+      temprature?: number;
+      humidity?: number;
+      wind?: number;
+      icon?: string;
+    };
+  }[];
+  currentCityIndex: number;
 }
 
 export const WeatherMachine = machine<weatherMachineContext>(
@@ -18,9 +21,8 @@ export const WeatherMachine = machine<weatherMachineContext>(
     id: 'weather',
     initial: 'start',
     context: {
-      coords: {},
-      data: {},
       cities: [],
+      currentCityIndex: 0,
     },
     states: {
       start: {
@@ -37,7 +39,7 @@ export const WeatherMachine = machine<weatherMachineContext>(
           src: 'getLocation',
           onDone: {
             target: 'query',
-            actions: assign({ coords: (context, event) => event.data }),
+            actions: assign((context, event) => event.data),
           },
           onError: {
             target: 'geolocation',
@@ -50,7 +52,7 @@ export const WeatherMachine = machine<weatherMachineContext>(
           src: 'getData',
           onDone: {
             target: 'display',
-            actions: assign({ data: (context, event) => event.data }),
+            actions: assign({ cities: (context, event) => event.data }),
           },
         },
       },
@@ -68,43 +70,51 @@ export const WeatherMachine = machine<weatherMachineContext>(
     services: {
       getLocation: (context, event) =>
         new Promise((resolve) => {
-          if (context.coords.lat) {
-            resolve(context.coords);
-          }
-
           global.navigator.geolocation.getCurrentPosition((position) => {
-            resolve({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            });
+            const newCity = {
+              coords: {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              },
+              data: {},
+            };
+
+            const newContext = context;
+            newContext.cities = [newCity];
+            resolve(newContext);
           });
         }),
 
       getData: (context, event) =>
         new Promise((resolve) => {
           let url = '';
-          if (context.cities.length === 0)
-            url = `https://api.openweathermap.org/data/2.5/weather?lat=${context.coords.lat}&lon=${context.coords.lng}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
-          else {
-            const cities = context.cities;
-            url = `https://api.openweathermap.org/data/2.5/weather?q=${cities[0]}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
-          }
 
-          Axios.get(url).then(
-            (response) => {
-              const data = {
-                temprature: response.data.main.temp,
-                humidity: response.data.main.humidity,
-                name: response.data.name,
-                wind: response.data.wind.speed,
-                icon: response.data.weather[0].icon,
-              };
-              resolve(data);
-            },
-            (error) => {
-              console.error('Axios error:', error);
+          const listOfWeatherPromises = context.cities.map((city) => {
+            if (!city.name)
+              url = `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
+            else {
+              url = `https://api.openweathermap.org/data/2.5/weather?q=${city.name}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
             }
-          );
+
+            return Axios.get(url);
+          });
+
+          const weatherResponses = Promise.all(listOfWeatherPromises);
+
+          weatherResponses.then((response) => {
+            const updatedCities = context.cities.map((city, index) => {
+              const data = {
+                temprature: response[index].data.main.temp,
+                humidity: response[index].data.main.humidity,
+                name: response[index].data.name,
+                wind: response[index].data.wind.speed,
+                icon: response[index].data.weather[0].icon,
+              };
+              return { ...city, data };
+            });
+
+            resolve(updatedCities);
+          });
         }),
       startTimer: (context, event) => (cb) => {
         const interval = setInterval(() => {

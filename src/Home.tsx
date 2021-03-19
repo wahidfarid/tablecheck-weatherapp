@@ -14,10 +14,18 @@ const Home = () => {
   const searchParams = new URLSearchParams(useLocation().search).get('city');
 
   if (!searchParams) send('GEOLOCATION');
-  else send('QUERY', { cities: searchParams.split(',') });
+  else
+    send('QUERY', {
+      cities: searchParams.split(',').map((name) => {
+        return { name };
+      }),
+    });
 
   let outputComponent = <StartComponent />;
-  if (current.context.data.name) {
+  if (
+    current.context.cities.length > 0 &&
+    current.context.cities[current.context.currentCityIndex].data?.name
+  ) {
     outputComponent = <DisplayComponent context={current.context} />;
   }
 

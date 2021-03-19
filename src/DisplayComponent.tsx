@@ -94,18 +94,25 @@ const DisplayComponent = ({ context }: DisplayProps) => {
       css={css`
         ${containerStyle};
         background-color: ${calculateBackgroundColorBasedOnTemprature(
-          context.data.temprature
+          context.cities[context.currentCityIndex].data.temprature
         )};
       `}
     >
       <div css={wrapperStyle}>
-        <h2 css={AreaTitleStyle}>{context.data.name}</h2>
+        <h2 css={AreaTitleStyle}>
+          {context.cities[context.currentCityIndex].data.name}
+        </h2>
         <i
-          className={`wi ${weatherIconsMap[context.data.icon]}`}
+          className={`wi ${
+            weatherIconsMap[context.cities[context.currentCityIndex].data.icon]
+          }`}
           css={IconStyle}
         ></i>
         <div css={DividerStyle}></div>
-        <h3 css={TempratureStyle}>{Math.round(context.data.temprature)}°</h3>
+        <h3 css={TempratureStyle}>
+          {Math.round(context.cities[context.currentCityIndex].data.temprature)}
+          °
+        </h3>
         <div>
           <h4
             css={css`
@@ -114,7 +121,7 @@ const DisplayComponent = ({ context }: DisplayProps) => {
             `}
           >
             <i css={minorIconStyles} className="wi wi-raindrop"></i>
-            {context.data.humidity} %
+            {context.cities[context.currentCityIndex].data.humidity} %
           </h4>
           <h4
             css={css`
@@ -123,7 +130,7 @@ const DisplayComponent = ({ context }: DisplayProps) => {
             `}
           >
             <i css={minorIconStyles} className="wi wi-strong-wind"></i>
-            {context.data.wind}{' '}
+            {context.cities[context.currentCityIndex].data.wind}{' '}
             <span
               css={css`
                 font-size: 2rem;
