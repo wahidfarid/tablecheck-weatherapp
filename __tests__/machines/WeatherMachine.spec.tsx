@@ -82,11 +82,20 @@ describe('Geolocation State', () => {
     service.send('QUERY', { cities });
   });
 
-  it('should iterate through list of cities in querystrings and call each one consecutively', (done) => {
-    const service = interpret(WeatherMachine)
-      .onTransition((state) => {
-        if (state.matches('display')) {
-          done.fail();
+  it('should iterate through list of cities in querystrings and display their weather data consecutively', (done) => {
+    const mockMachine = WeatherMachine.withConfig({
+      services: {
+        cycleCities: (_, event) => (cb) => {
+          cb('CYCLE');
+          return () => {};
+        },
+      },
+    });
+
+    const service = interpret(mockMachine)
+      .onEvent((event) => {
+        if (event.type == 'CYCLE') {
+          done();
         }
       })
       .start();

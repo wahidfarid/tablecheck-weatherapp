@@ -57,11 +57,25 @@ export const WeatherMachine = machine<weatherMachineContext>(
         },
       },
       display: {
-        invoke: {
-          src: 'startTimer',
-        },
+        invoke: [
+          {
+            src: 'startTimer',
+          },
+          {
+            src: 'cycleCities',
+          },
+        ],
         on: {
           TICK: 'query',
+          CYCLE: {
+            internal: true,
+            actions: assign((context, _event) => {
+              context.currentCityIndex++;
+              context.currentCityIndex =
+                context.currentCityIndex % context.cities.length;
+              return context;
+            }),
+          },
         },
       },
     },
@@ -120,6 +134,14 @@ export const WeatherMachine = machine<weatherMachineContext>(
         const interval = setInterval(() => {
           cb('TICK');
         }, 1000 * 60 * 5);
+        return () => {
+          clearInterval(interval);
+        };
+      },
+      cycleCities: (context, event) => (cb) => {
+        const interval = setInterval(() => {
+          cb('CYCLE');
+        }, 5000);
         return () => {
           clearInterval(interval);
         };
