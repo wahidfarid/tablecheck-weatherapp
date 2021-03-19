@@ -85,7 +85,7 @@ export const WeatherMachine = machine<weatherMachineContext>(
               resolve({ data });
             },
             (error) => {
-              console.log('Axios error:', error);
+              console.error('Axios error:', error);
             }
           )
         ),
