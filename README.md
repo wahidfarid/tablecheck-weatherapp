@@ -34,6 +34,7 @@
 
 ### Future nice to haves
 - [ ] Crossbrowser testing confirmation
+- [ ] Storybook components
 - [ ] animated backgrounds
 - [ ] Only import needed icons from weather-icons
 - [ ] Cache and/or render cached weather through SSR
