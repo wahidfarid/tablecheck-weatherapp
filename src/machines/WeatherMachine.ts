@@ -10,6 +10,7 @@ export interface weatherMachineContext {
     wind?: number;
     icon?: string;
   };
+  cities: string[];
 }
 
 export const WeatherMachine = machine<weatherMachineContext>(
@@ -19,9 +20,16 @@ export const WeatherMachine = machine<weatherMachineContext>(
     context: {
       coords: {},
       data: {},
+      cities: [],
     },
     states: {
       start: {
+        on: {
+          GEOLOCATION: 'geolocation',
+          QUERY: 'query',
+        },
+      },
+      geolocation: {
         invoke: {
           src: 'getLocation',
           onDone: {
@@ -29,7 +37,7 @@ export const WeatherMachine = machine<weatherMachineContext>(
             actions: assign({ coords: (context, event) => event.data }),
           },
           onError: {
-            target: 'start',
+            target: 'geolocation',
             actions: (context, event) => alert(event.data),
           },
         },
@@ -39,7 +47,7 @@ export const WeatherMachine = machine<weatherMachineContext>(
           src: 'getData',
           onDone: {
             target: 'display',
-            actions: assign((context, event) => event.data),
+            actions: assign({ data: (context, event) => event.data }),
           },
         },
       },
@@ -70,10 +78,14 @@ export const WeatherMachine = machine<weatherMachineContext>(
         }),
 
       getData: (context, event) =>
-        new Promise((resolve) =>
-          Axios.get(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${context.coords.lat}&lon=${context.coords.lng}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`
-          ).then(
+        new Promise((resolve) => {
+          let url = '';
+          if (event.type !== 'QUERY')
+            url = `https://api.openweathermap.org/data/2.5/weather?lat=${context.coords.lat}&lon=${context.coords.lng}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
+          else
+            url = `https://api.openweathermap.org/data/2.5/weather?q=${event.cities[0]}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
+
+          Axios.get(url).then(
             (response) => {
               const data = {
                 temprature: response.data.main.temp,
@@ -82,13 +94,13 @@ export const WeatherMachine = machine<weatherMachineContext>(
                 wind: response.data.wind.speed,
                 icon: response.data.weather[0].icon,
               };
-              resolve({ data });
+              resolve(data);
             },
             (error) => {
               console.error('Axios error:', error);
             }
-          )
-        ),
+          );
+        }),
       startTimer: (context, event) => (cb) => {
         const interval = setInterval(() => {
           cb('TICK');

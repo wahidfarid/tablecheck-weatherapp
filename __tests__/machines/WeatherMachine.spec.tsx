@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom';
 import { interpret } from 'xstate';
 
 import WeatherMachine, {
@@ -21,37 +22,70 @@ describe('Start State', () => {
     );
   });
 
-  it('should transition from `start` to `query` after running getLocation service', (done) => {
+  it('should transition from `start` to `geolocation` after running getLocation service', (done) => {
     interpret(WeatherMachine)
       .onTransition((state) => {
-        if (state.matches('query')) {
+        if (state.matches('geolocation')) {
           expect(true).toBe(true);
           done();
         }
       })
+      .start()
+      .send('GEOLOCATION');
+  });
+
+  it('should detect query strings and transition to `Query` state accordingly', (done) => {
+    const service = interpret(WeatherMachine)
+      .onTransition((state) => {
+        if (state.matches('query')) done();
+      })
       .start();
+
+    const searchParams = new URLSearchParams(window.URL.toString()).get('city');
+    if (!searchParams) service.send('GEOLOCATION');
+    else service.send('QUERY', { cities: searchParams.split(',') });
   });
 });
 
-describe('Query State', () => {
-  it('should request weather information successfully and transition to `display`', (done) => {
-    const customContext = { ...expectedCoordinates, data: {} };
+describe('Geolocation State', () => {
+  it('should request weather information by location successfully and transition to `display`', (done) => {
+    const customContext = { ...expectedCoordinates, data: {}, cities: [] };
     const machine = WeatherMachine.withContext(
       customContext as weatherMachineContext
     );
+
     interpret(machine)
       .onTransition((state) => {
         if (state.matches('display')) {
           done();
         }
       })
+      .start()
+      .send('GEOLOCATION');
+  });
+
+  it('should request weather information by querystring successfully and transition to `display`', (done) => {
+    const service = interpret(WeatherMachine)
+      .onTransition((state) => {
+        if (state.matches('display')) {
+          expect(state.context.data.name).toBe('Cairo');
+          done();
+        }
+      })
       .start();
+
+    const searchParams = new URLSearchParams(window.URL.toString()).get('city');
+    service.send('QUERY', { cities: searchParams.split(',') });
+  });
+
+  it('should iterate through list of cities in querystrings and call each one consecutively', () => {
+    fail();
   });
 });
 
 describe('Display State', () => {
   it('should update weather information periodically', (done) => {
-    const customContext = { ...expectedCoordinates, data: {} };
+    const customContext = { ...expectedCoordinates, data: {}, cities: [] };
 
     const mockMachine = WeatherMachine.withContext(
       customContext as weatherMachineContext
@@ -68,7 +102,8 @@ describe('Display State', () => {
       .onEvent((event) => {
         if (event.type == 'TICK') done();
       })
-      .start();
+      .start()
+      .send('GEOLOCATION');
   });
 });
 

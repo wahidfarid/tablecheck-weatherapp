@@ -24,3 +24,8 @@ global.navigator.permissions = {
     .fn()
     .mockImplementationOnce(() => Promise.resolve({ state: 'granted' })),
 };
+
+// Mock URL Params
+jest
+  .spyOn(URLSearchParams.prototype, 'get')
+  .mockImplementation((key) => 'cairo');

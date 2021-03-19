@@ -2,9 +2,8 @@
 // eslint-disable-next-line no-use-before-define
 import React from 'react';
 import { css, jsx } from '@emotion/react';
-import { useMachine } from '@xstate/react';
 
-import WeatherMachine from './machines/WeatherMachine';
+import { weatherMachineContext } from './machines/WeatherMachine';
 import weatherIconsMap from './assets/weatherIconsMap.json';
 
 // rgb(40,63,143)
@@ -86,29 +85,27 @@ export const calculateBackgroundColorBasedOnTemprature = (temp: number = 0) => {
 
   return 'rgb(' + output.join(',') + ');';
 };
-
-const DisplayComponent = () => {
-  const [current] = useMachine(WeatherMachine);
-
+type DisplayProps = {
+  context: weatherMachineContext;
+};
+const DisplayComponent = ({ context }: DisplayProps) => {
   return (
     <div
       css={css`
         ${containerStyle};
         background-color: ${calculateBackgroundColorBasedOnTemprature(
-          current.context.data.temprature
+          context.data.temprature
         )};
       `}
     >
       <div css={wrapperStyle}>
-        <h2 css={AreaTitleStyle}>{current.context.data.name}</h2>
+        <h2 css={AreaTitleStyle}>{context.data.name}</h2>
         <i
-          className={`wi ${weatherIconsMap[current.context.data.icon]}`}
+          className={`wi ${weatherIconsMap[context.data.icon]}`}
           css={IconStyle}
         ></i>
         <div css={DividerStyle}></div>
-        <h3 css={TempratureStyle}>
-          {Math.round(current.context.data.temprature)}°
-        </h3>
+        <h3 css={TempratureStyle}>{Math.round(context.data.temprature)}°</h3>
         <div>
           <h4
             css={css`
@@ -117,7 +114,7 @@ const DisplayComponent = () => {
             `}
           >
             <i css={minorIconStyles} className="wi wi-raindrop"></i>
-            {current.context.data.humidity} %
+            {context.data.humidity} %
           </h4>
           <h4
             css={css`
@@ -126,7 +123,7 @@ const DisplayComponent = () => {
             `}
           >
             <i css={minorIconStyles} className="wi wi-strong-wind"></i>
-            {current.context.data.wind}{' '}
+            {context.data.wind}{' '}
             <span
               css={css`
                 font-size: 2rem;
