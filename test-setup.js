@@ -28,4 +28,6 @@ global.navigator.permissions = {
 // Mock URL Params
 jest
   .spyOn(URLSearchParams.prototype, 'get')
-  .mockImplementation((key) => 'cairo');
+  .mockImplementationOnce((key) => 'cairo')
+  .mockImplementationOnce((key) => 'cairo')
+  .mockImplementationOnce((key) => 'cairo,tokyo,berlin');

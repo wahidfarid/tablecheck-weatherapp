@@ -82,8 +82,22 @@ describe('Geolocation State', () => {
     service.send('QUERY', { cities });
   });
 
-  it('should iterate through list of cities in querystrings and call each one consecutively', () => {
-    fail();
+  it('should iterate through list of cities in querystrings and call each one consecutively', (done) => {
+    const service = interpret(WeatherMachine)
+      .onTransition((state) => {
+        if (state.matches('display')) {
+          done.fail();
+        }
+      })
+      .start();
+
+    const cities = new URLSearchParams(window.URL.toString())
+      .get('city')
+      .split(',')
+      .map((name) => {
+        return { name };
+      });
+    service.send('QUERY', { cities });
   });
 });
 
