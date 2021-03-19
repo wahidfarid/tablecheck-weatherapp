@@ -1,7 +1,4 @@
-/** @jsx jsx */
-// eslint-disable-next-line no-use-before-define
 import React from 'react';
-import { jsx } from '@emotion/react';
 import { useMachine } from '@xstate/react';
 
 import WeatherMachine from './machines/WeatherMachine';
