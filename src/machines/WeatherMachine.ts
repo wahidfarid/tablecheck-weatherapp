@@ -26,7 +26,10 @@ export const WeatherMachine = machine<weatherMachineContext>(
       start: {
         on: {
           GEOLOCATION: 'geolocation',
-          QUERY: 'query',
+          QUERY: {
+            target: 'query',
+            actions: assign({ cities: (context, event) => event.cities }),
+          },
         },
       },
       geolocation: {
@@ -80,10 +83,12 @@ export const WeatherMachine = machine<weatherMachineContext>(
       getData: (context, event) =>
         new Promise((resolve) => {
           let url = '';
-          if (event.type !== 'QUERY')
+          if (context.cities.length === 0)
             url = `https://api.openweathermap.org/data/2.5/weather?lat=${context.coords.lat}&lon=${context.coords.lng}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
-          else
-            url = `https://api.openweathermap.org/data/2.5/weather?q=${event.cities[0]}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
+          else {
+            const cities = context.cities;
+            url = `https://api.openweathermap.org/data/2.5/weather?q=${cities[0]}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
+          }
 
           Axios.get(url).then(
             (response) => {

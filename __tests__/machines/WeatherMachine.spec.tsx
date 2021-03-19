@@ -86,17 +86,14 @@ describe('Geolocation State', () => {
 describe('Display State', () => {
   it('should update weather information periodically', (done) => {
     const customContext = { ...expectedCoordinates, data: {}, cities: [] };
-
-    const mockMachine = WeatherMachine.withContext(
-      customContext as weatherMachineContext
-    ).withConfig({
+    const mockMachine = WeatherMachine.withConfig({
       services: {
         startTimer: (_, event) => (cb) => {
           cb('TICK');
           return () => {};
         },
       },
-    });
+    }).withContext(customContext as weatherMachineContext);
 
     interpret(mockMachine)
       .onEvent((event) => {
