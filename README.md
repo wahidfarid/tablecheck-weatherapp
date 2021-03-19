@@ -29,11 +29,12 @@
 - [x] display data, map data to icons
 - [x] refresh every 5 minutes
 - [x] get data from url querystring (comma seperated)
-- [ ] fade animations between refreshes
 - [ ] Deploy
+- [ ] fade animations between refreshes
 
 ### Future nice to haves
 - [ ] Crossbrowser testing confirmation
+- [ ] Different layout for desktop view (as per wireframe)
 - [ ] Storybook components
 - [ ] Refactor existing unit tests and implement more
 - [ ] animated backgrounds
