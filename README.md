@@ -28,15 +28,17 @@
 - [x] query weather api for data
 - [x] display data, map data to icons
 - [x] refresh every 5 minutes
-- [ ] get data for url querystring (comma seperated)
-- [ ] animated backgrounds
+- [ ] get data from url querystring (comma seperated)
 - [ ] fade animations between refreshes
+- [ ] Deploy
 
 ### Future nice to haves
 - [ ] Crossbrowser testing confirmation
+- [ ] animated backgrounds
 - [ ] Only import needed icons from weather-icons
 - [ ] Cache and/or render cached weather through SSR
 - [ ] Refactor WeatherMachine into smaller actors
 - [ ] Page insights testing
 - [ ] E2E testing
+- [ ] Visualize machine states
 ...
