@@ -2,6 +2,9 @@
   "name": "TableCheck-WeatherApp",
   "version": "4.0.1",
   "license": "MIT",
+  "browserslist": [
+    "ie 11"
+  ],
   "scripts": {
     "start:tsc": "tsc -b -w --preserveWatchOutput",
     "start": "concurrently 'razzle start'",
@@ -17,6 +20,7 @@
     "core-js": "^3.9.1",
     "express": "^4.17.1",
     "react": "^17.0.1",
+    "react-app-polyfill": "^2.0.0",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.1.2",
     "regenerator-runtime": "^0.13.7",

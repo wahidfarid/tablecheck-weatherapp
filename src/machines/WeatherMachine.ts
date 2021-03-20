@@ -84,19 +84,28 @@ export const WeatherMachine = machine<weatherMachineContext>(
     services: {
       getLocation: (context, event) =>
         new Promise((resolve) => {
-          global.navigator.geolocation.getCurrentPosition((position) => {
-            const newCity = {
-              coords: {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude,
-              },
-              data: {},
-            };
+          global.navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const newCity = {
+                coords: {
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                },
+                data: {},
+              };
 
-            const newContext = context;
-            newContext.cities = [newCity];
-            resolve(newContext);
-          });
+              const newContext = context;
+              newContext.cities = [newCity];
+              resolve(newContext);
+            },
+            (error) => {
+              console.error(error);
+            },
+            {
+              enableHighAccuracy: false,
+              maximumAge: 50000,
+            }
+          );
         }),
 
       getData: (context, event) =>

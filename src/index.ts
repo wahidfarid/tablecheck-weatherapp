@@ -1,5 +1,3 @@
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
 import express from 'express';
 
 let app = require('./server').default;

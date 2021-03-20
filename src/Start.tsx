@@ -17,7 +17,7 @@ const containerStyle = css({
 const StartComponent = () => (
   <div
     css={css`
-      background: rgba(50, 150, 210);
+      background: rgb(50, 150, 210);
       height: 100%;
     `}
   >

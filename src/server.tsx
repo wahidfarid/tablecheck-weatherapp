@@ -1,3 +1,7 @@
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 import express from 'express';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
