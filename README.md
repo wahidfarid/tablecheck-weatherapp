@@ -32,7 +32,7 @@
 - [x] refresh every 5 minutes
 - [x] get data from url querystring (comma seperated)
 - [x] Deploy
-- [ ] fade animations between refreshes
+- [x] fade animations between refreshes
 - [ ] Fix IE11 (tested working properly on chrome/firefox/safari/edge)
 - [ ] Different layout for desktop view (as per wireframe)
 

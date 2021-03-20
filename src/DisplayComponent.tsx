@@ -6,7 +6,6 @@ import { css, jsx } from '@emotion/react';
 import { weatherMachineContext } from './machines/WeatherMachine';
 import weatherIconsMap from './assets/weatherIconsMap.json';
 
-// rgb(40,63,143)
 const containerStyle = css({
   padding: '3rem',
   height: '100%',
@@ -16,6 +15,7 @@ const containerStyle = css({
   justifyContent: 'center',
   alignItems: 'center',
   boxDhadow: '0 0 20px rgba(0, 0, 0, 0.05) inset',
+  transition: 'all 1s',
 });
 
 const wrapperStyle = css({
