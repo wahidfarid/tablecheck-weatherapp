@@ -8,6 +8,13 @@ const expectedCoordinates = {
   coords: { latitude: 30.1531136, longitude: 31.185305599999996 },
 };
 
+const getCitiesFromURLQuery = () => {
+  const output = new URLSearchParams(window.URL.toString()).get('city') || '';
+  return output.split(',').map((name) => {
+    return { name };
+  });
+};
+
 describe('Start State', () => {
   it('should use navigator to get current location', (done) => {
     global.navigator.geolocation.getCurrentPosition(
@@ -40,14 +47,9 @@ describe('Start State', () => {
       })
       .start();
 
-    const searchParams = new URLSearchParams(window.URL.toString()).get('city');
-    if (!searchParams) service.send('GEOLOCATION');
-    else
-      service.send('QUERY', {
-        cities: searchParams.split(',').map((name) => {
-          return { name };
-        }),
-      });
+    const cities = getCitiesFromURLQuery();
+    if (cities[0].name == '') service.send('GEOLOCATION');
+    else service.send('QUERY', { cities });
   });
 });
 
@@ -62,7 +64,9 @@ describe('Geolocation State', () => {
       .start()
       .send('GEOLOCATION');
   });
+});
 
+describe('Query State', () => {
   it('should request weather information by querystring successfully and transition to `display`', (done) => {
     const service = interpret(WeatherMachine)
       .onTransition((state) => {
@@ -73,12 +77,7 @@ describe('Geolocation State', () => {
       })
       .start();
 
-    const cities = new URLSearchParams(window.URL.toString())
-      .get('city')
-      .split(',')
-      .map((name) => {
-        return { name };
-      });
+    const cities = getCitiesFromURLQuery();
     service.send('QUERY', { cities });
   });
 
@@ -100,12 +99,7 @@ describe('Geolocation State', () => {
       })
       .start();
 
-    const cities = new URLSearchParams(window.URL.toString())
-      .get('city')
-      .split(',')
-      .map((name) => {
-        return { name };
-      });
+    const cities = getCitiesFromURLQuery();
     service.send('QUERY', { cities });
   });
 });
@@ -141,7 +135,3 @@ describe('Display State', () => {
       .send('GEOLOCATION');
   });
 });
-
-it.todo('should detect if a location is cached and valid');
-it.todo('should not ask the user if cached location is valid');
-it.todo('should ask the user for location if cache older than 5 minutes');
