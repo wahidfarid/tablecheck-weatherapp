@@ -4,7 +4,7 @@ import React from 'react';
 import { css, jsx } from '@emotion/react';
 
 import { weatherMachineContext } from './machines/WeatherMachine';
-import weatherIconsMap from './assets/weatherIconsMap.json';
+import weatherIconsMap from './weatherIconsMap';
 
 const containerStyle = css({
   padding: '3rem',
@@ -60,6 +60,11 @@ const minorIconStyles = css`
   margin: 0 2rem;
 `;
 
+const minorTitleStyles = css`
+  font-size: 4rem;
+  margin: 0;
+`;
+
 export const calculateBackgroundColorBasedOnTemprature = (temp: number = 0) => {
   // Define color stop-points
   const tenPercentDeepBlue = [4, 6, 14]; // 10c
@@ -89,48 +94,33 @@ type DisplayProps = {
   context: weatherMachineContext;
 };
 const DisplayComponent = ({ context }: DisplayProps) => {
+  const currentCity = context.cities[context.currentCityIndex];
+  const icon: string = currentCity.data.icon!;
+
   return (
     <div
       css={css`
         ${containerStyle};
         background-color: ${calculateBackgroundColorBasedOnTemprature(
-          context.cities[context.currentCityIndex].data.temprature
+          currentCity.data.temprature
         )};
       `}
     >
       <div css={wrapperStyle}>
-        <h2 css={AreaTitleStyle}>
-          {context.cities[context.currentCityIndex].data.name}
-        </h2>
-        <i
-          className={`wi ${
-            weatherIconsMap[context.cities[context.currentCityIndex].data.icon]
-          }`}
-          css={IconStyle}
-        ></i>
+        <h2 css={AreaTitleStyle}>{currentCity.data.name}</h2>
+        <i className={`wi ${weatherIconsMap[icon]}`} css={IconStyle}></i>
         <div css={DividerStyle}></div>
         <h3 css={TempratureStyle}>
-          {Math.round(context.cities[context.currentCityIndex].data.temprature)}
-          °
+          {Math.round(currentCity.data.temprature || 0)}°
         </h3>
         <div>
-          <h4
-            css={css`
-              font-size: 4rem;
-              margin: 0;
-            `}
-          >
+          <h4 css={minorTitleStyles}>
             <i css={minorIconStyles} className="wi wi-raindrop"></i>
-            {context.cities[context.currentCityIndex].data.humidity} %
+            {currentCity.data.humidity} %
           </h4>
-          <h4
-            css={css`
-              font-size: 4rem;
-              margin: 0;
-            `}
-          >
+          <h4 css={minorTitleStyles}>
             <i css={minorIconStyles} className="wi wi-strong-wind"></i>
-            {context.cities[context.currentCityIndex].data.wind}{' '}
+            {currentCity.data.wind}{' '}
             <span
               css={css`
                 font-size: 2rem;
