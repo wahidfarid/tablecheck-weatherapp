@@ -35,7 +35,7 @@
 - [x] get data from url querystring (comma seperated)
 - [x] Deploy
 - [x] fade animations between refreshes
-- [ ] Fix IE11 (tested working properly on chrome/firefox/safari/edge)
+- [x] Fix IE11 (tested working properly on chrome/firefox/safari/edge)
 - [ ] Different layout for desktop view (as per wireframe)
 
 ### Future nice to haves
