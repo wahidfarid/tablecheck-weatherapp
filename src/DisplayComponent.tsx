@@ -27,6 +27,7 @@ const wrapperStyle = css({
   flexWrap: 'wrap',
   justifyContent: 'space-between',
   alignItems: 'center',
+  position: 'relative',
 });
 
 const AreaTitleStyle = css`
@@ -34,23 +35,56 @@ const AreaTitleStyle = css`
   text-transform: uppercase;
   width: 100%;
   text-align: center;
+  @media (min-width: 768px) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    margin: 0;
+    overflow: visible;
+  }
 `;
 
 const IconStyle = css`
   font-size: 14rem;
   width: 100%;
   text-align: center;
+  @media (min-width: 768px) {
+    width: 33%;
+    font-size: 20rem;
+  }
 `;
 
 const DividerStyle = css`
   border-top: 1px solid #fff;
   width: 100%;
   margin-top: 4rem;
+  @media (min-width: 768px) {
+    display: none;
+  }
 `;
 
 const TempratureStyle = css`
   font-size: 10rem;
   margin: 0;
+  @media (min-width: 768px) {
+    order: -1;
+    align-self: flex-end;
+    width: 33%;
+    height: 16rem;
+    font-size: 16rem;
+  }
+`;
+
+const minorWrapperStyle = css`
+  @media (min-width: 768px) {
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 5rem 0;
+  }
 `;
 
 const minorIconStyles = css`
@@ -63,6 +97,9 @@ const minorIconStyles = css`
 const minorTitleStyles = css`
   font-size: 4rem;
   margin: 0;
+  @media (min-width: 768px) {
+    text-align: right;
+  }
 `;
 
 export const calculateBackgroundColorBasedOnTemprature = (temp: number = 0) => {
@@ -113,7 +150,7 @@ const DisplayComponent = ({ context }: DisplayProps) => {
         <h3 css={TempratureStyle}>
           {Math.round(currentCity.data.temprature || 0)}°
         </h3>
-        <div>
+        <div css={minorWrapperStyle}>
           <h4 css={minorTitleStyles}>
             <i css={minorIconStyles} className="wi wi-raindrop"></i>
             {currentCity.data.humidity} %
