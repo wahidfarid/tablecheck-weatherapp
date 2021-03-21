@@ -14,7 +14,7 @@
 
 ## Description
 
-Simple application that displays current weather, test at [Weather application made with React](https://table-check-weather-app.vercel.app/). It works either by asking for your geolocation, or by a list of comma-seperated cities in the query parameters like this example https://table-check-weather-app.vercel.app/?city=tokyo,cairo,london,dubai . Uses data from [OpenWeatherMap](https://openweathermap.org/) .
+Simple application that displays current weather, test at [https://table-check-weather-app.vercel.app/](https://table-check-weather-app.vercel.app/). It works either by asking for your geolocation, or by a list of comma-seperated cities in the query parameters like this example https://table-check-weather-app.vercel.app/?city=tokyo,cairo,london,dubai . Uses data from [OpenWeatherMap](https://openweathermap.org/) .
 
 Made with Razzle, React (FC), Typescript, Emotion/Styled, XState, Storybook, Jest, Enzyme, ESLint, Prettier, Babel and Webpack
 
