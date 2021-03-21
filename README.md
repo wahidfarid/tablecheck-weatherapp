@@ -51,7 +51,6 @@
 - [x] Storybook components
 - [x] Refactor existing unit tests and implement more
 - [x] Remove weather icon font and only import needed icons as SVGs
-- [ ] Refactor WeatherMachine into smaller actors
 - [ ] Page insights testing
 - [ ] Dynamic youtube Video backgrounds based on weather
 - [ ] E2E testing

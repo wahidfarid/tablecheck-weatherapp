@@ -1,19 +1,36 @@
 import { assign, Machine as machine } from 'xstate';
 import Axios from 'axios';
 
-export interface weatherMachineContext {
-  cities: {
-    coords: { lat: number; lng: number };
+const serializeWeatherAPIRequests = (
+  cities: weatherMachineCity[]
+): Promise<any> => {
+  let url = '';
+  const listOfWeatherPromises = cities.map((city) => {
+    if (!city.name)
+      url = `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
+    else {
+      url = `https://api.openweathermap.org/data/2.5/weather?q=${city.name}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
+    }
+
+    return Axios.get(url);
+  });
+  return Promise.all(listOfWeatherPromises);
+};
+
+interface weatherMachineCity {
+  coords: { lat: number; lng: number };
+  name?: string;
+  data: {
     name?: string;
-    data: {
-      name?: string;
-      temprature?: number;
-      humidity?: number;
-      wind?: number;
-      icon?: string;
-      deg?: number;
-    };
-  }[];
+    temprature?: number;
+    humidity?: number;
+    wind?: number;
+    icon?: string;
+    deg?: number;
+  };
+}
+export interface weatherMachineContext {
+  cities: weatherMachineCity[];
   currentCityIndex: number;
 }
 
@@ -111,20 +128,10 @@ export const WeatherMachine = machine<weatherMachineContext>(
 
       getData: (context, event) =>
         new Promise((resolve) => {
-          let url = '';
+          // Serialize weather api request promises
+          const weatherResponses = serializeWeatherAPIRequests(context.cities);
 
-          const listOfWeatherPromises = context.cities.map((city) => {
-            if (!city.name)
-              url = `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
-            else {
-              url = `https://api.openweathermap.org/data/2.5/weather?q=${city.name}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
-            }
-
-            return Axios.get(url);
-          });
-
-          const weatherResponses = Promise.all(listOfWeatherPromises);
-
+          // Once all of them are done, iterate on responses and return values to be assigned to context
           weatherResponses
             .then((response) => {
               const updatedCities = context.cities.map((city, index) => {
