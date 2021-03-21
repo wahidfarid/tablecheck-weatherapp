@@ -71,22 +71,22 @@ export const WeatherMachine = machine<weatherMachineContext>(
         invoke: {
           src: 'getData',
           onDone: {
-            target: 'checkVideo',
+            target: 'display', // temporarily automatically transition to the next state until the youtube api fix
             actions: assign({ cities: (context, event) => event.data }),
           },
         },
       },
-      checkVideo: {
-        on: {
-          '': 'display',
-        },
-        // invoke: {
-        //   id: 'background',
-        //   src: BackgroundMachine,
-        //   data: { cities: (context: weatherMachineContext) => context.cities },
-        //   onDone: 'display',
-        // },
-      },
+      // checkVideo: {
+      //   on: {
+      //     '': 'display',
+      //   },
+      // invoke: {
+      //   id: 'background',
+      //   src: BackgroundMachine,
+      //   data: { cities: (context: weatherMachineContext) => context.cities },
+      //   onDone: 'display',
+      // },
+      // },
       display: {
         invoke: [
           {
