@@ -1,8 +1,49 @@
 # TableCheck interview task : Weather-app
+<!-- TOC -->
+- [Description](#description)
+- [Images](#images)
+- [How to run locally](#how-to-run-locally)
+- [Thoughts/Comments while working on the project](#thoughtscomments-while-working-on-the-project)
+- [Checklists and Misc Notes.](#checklists-and-misc-notes)
+  - [WeatherMachine Visualization](#weathermachine-visualization)
+  - [Wireframe before implementation](#wireframe-before-implementation)
+  - [Checklist](#checklist)
+  - [Future nice to haves](#future-nice-to-haves)
+  - [Pending issues](#pending-issues)
+<!-- /TOC -->
 
 ## Description
 
-[Weather application made with React](https://table-check-weather-app.vercel.app/). It works either by asking for your geolocation, or by a list of comma-seperated cities in the query parameters like this example https://table-check-weather-app.vercel.app/?city=tokyo,cairo,london,dubai
+Simple application that displays current weather, test at [Weather application made with React](https://table-check-weather-app.vercel.app/). It works either by asking for your geolocation, or by a list of comma-seperated cities in the query parameters like this example https://table-check-weather-app.vercel.app/?city=tokyo,cairo,london,dubai . Uses data from [OpenWeatherMap](https://openweathermap.org/) .
+
+Made with Razzle, React (FC), Typescript, Emotion/Styled, XState, Storybook, Jest, Enzyme, ESLint, Prettier, Babel and Webpack
+
+## Images
+
+Desktop View
+
+![Desktop view](desktop.png)
+
+Mobile View
+
+![Mobile View](mobile.png)
+
+Google PageSpeed Insights
+
+![Google PageSpeed Insights](insights.png)
+
+Google Lighthouse
+
+![Google Lighthouse](lighthouse.png)
+
+## How to run locally
+
+simply clone the project, run `npm install` and you should be good to go! (and switch out api keys in )
+- `npm start` to run locally for development
+- `npm run test` to run unit tests
+- `npm run storybook` to run storybook
+- `npm build` then `npx vercel --prod` to deploy
+
 
 ## Thoughts/Comments while working on the project
 
@@ -24,6 +65,9 @@
 
 ---
 
+## Checklists and Misc Notes.
+### WeatherMachine Visualization
+![WeatherMachine](machine.png)
 ### Wireframe before implementation
 ![Wireframe](wireframe.png)
 ### Checklist
@@ -52,12 +96,12 @@
 - [x] Refactor existing unit tests and implement more
 - [x] Remove weather icon font and only import needed icons as SVGs
 - [x] Page insights testing
+- [x] Visualize machine states
 - [~] Dynamic youtube Video backgrounds based on weather (Partially implemented, found out that there's a rather strict quota limit for the youtube api. i'll need to refactor a big portion of what i've already implemented to use a different API to get around this limitation,)
 - [ ] E2E testing
-- [ ] Visualize machine states
 
 ### Pending issues
 - Scrolling icon background's speed and direction get stuck after completing a full cycle of all listed cities
-- Scrolling icon background recenters every 5 seconds so as not to expose plain background. this is un-noticable while cycling through cities but obvious with only one city. should implement a way to seamlessly center the background while in view...
+- Scrolling icon background recenters every 5 seconds so as not to expose plain background. this is un-noticable while cycling through cities but obvious with only one city. should implement a way to seamlessly center the background while in view... Issue is caused by unequal momentum between the x and y axis while scrolling. easiest solution i think is to limit the scrolling directions to 8. that way when the pattern recenters itself, it should perfectly overlap and not "jump" 
 - Importing the global styles in Storybook's `preview.js` or `preview-head.html` does not display the component properly for some reason? for the time being, importing the global styles inside each component story seems to properly display everything
 ...
