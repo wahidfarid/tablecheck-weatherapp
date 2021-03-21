@@ -2,9 +2,19 @@
 // eslint-disable-next-line no-use-before-define
 import React from 'react';
 import { css, jsx } from '@emotion/react';
+import styled from '@emotion/styled';
 
 import { weatherMachineContext } from './machines/WeatherMachine';
 import weatherIconsMap from './weatherIconsMap';
+
+type backgroundIconWrapperProps = {
+  windDirection: {
+    xAxis: number;
+    yAxis: number;
+  };
+  icon: string;
+  speed: number;
+};
 
 const containerStyle = css({
   padding: '3rem',
@@ -17,6 +27,34 @@ const containerStyle = css({
   boxDhadow: '0 0 20px rgba(0, 0, 0, 0.05) inset',
   transition: 'all 1s',
 });
+
+const BackgroundIconWrapper = styled.div`
+  ${(props: backgroundIconWrapperProps) => {
+    return `background: url(/weather-icons/${props.icon}.svg);
+      animation-duration: 5s; 
+      @keyframes bg-slide {
+        from {
+          transform: translate(0, 0);
+        }
+        to {
+          transform: translate(${
+            props.windDirection.xAxis * Math.round(props.speed)
+          }rem, 
+          ${props.windDirection.yAxis * Math.round(props.speed)}rem);
+        }
+      }
+    `;
+  }}
+
+  animation: bg-slide 5s linear infinite;
+  background-size: 5rem;
+  opacity: 0.03;
+  position: absolute;
+  width: calc(200%);
+  height: calc(200%);
+  top: -50%;
+  left: -50%;
+`;
 
 const wrapperStyle = css({
   maxWidth: '700px',
@@ -102,7 +140,7 @@ const minorTitleStyles = css`
   }
 `;
 
-export const calculateBackgroundColorBasedOnTemprature = (temp: number = 0) => {
+const calculateBackgroundColorBasedOnTemprature = (temp: number = 0) => {
   // Define color stop-points
   const tenPercentDeepBlue = [4, 6, 14]; // 10c
   const tenPercentLightBlue = [5, 15, 21]; // 20c
@@ -127,9 +165,18 @@ export const calculateBackgroundColorBasedOnTemprature = (temp: number = 0) => {
 
   return 'rgb(' + output.join(',') + ');';
 };
+
+const calculateWindDirectionBasedOnDegree = (deg: number = 0) => {
+  const x = Math.cos(((deg - 90) * Math.PI) / 180);
+  const y = Math.sin(((deg - 90) * Math.PI) / 180);
+
+  return { xAxis: x * 5, yAxis: y * 5 };
+};
+
 type DisplayProps = {
   context: weatherMachineContext;
 };
+
 const DisplayComponent = ({ context }: DisplayProps) => {
   const currentCity = context.cities[context.currentCityIndex];
   const icon: string = currentCity.data.icon!;
@@ -143,6 +190,13 @@ const DisplayComponent = ({ context }: DisplayProps) => {
         )};
       `}
     >
+      <BackgroundIconWrapper
+        icon={weatherIconsMap[icon]}
+        windDirection={calculateWindDirectionBasedOnDegree(
+          currentCity.data.deg
+        )}
+        speed={currentCity.data.wind!}
+      />
       <div css={wrapperStyle}>
         <h2 css={AreaTitleStyle}>{currentCity.data.name}</h2>
         <i className={`wi ${weatherIconsMap[icon]}`} css={IconStyle}></i>

@@ -11,6 +11,7 @@ export interface weatherMachineContext {
       humidity?: number;
       wind?: number;
       icon?: string;
+      deg?: number;
     };
   }[];
   currentCityIndex: number;
@@ -132,6 +133,7 @@ export const WeatherMachine = machine<weatherMachineContext>(
                 name: response[index].data.name,
                 wind: response[index].data.wind.speed,
                 icon: response[index].data.weather[0].icon,
+                deg: response[index].data.wind.deg,
               };
               return { ...city, data };
             });

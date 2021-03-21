@@ -14,7 +14,7 @@
 
 - The bulk of my previous experience was with [Tyro-app](https://tyro-app.com) which had videoconferencing done over websockets and WebRTC. That means that it was a requirement for our users to have recent versions of their browsers, or in some cases completely avoid certain browsers such as IE/Edge as they did not support WebRTC. That means i didn't have a lot of experience with transpiling and polyfilling JS. It took me quite a bit of time and effort to get it working here, especially because i've stopped using Windows and wasn't going to dual-boot or run a VM just to confirm IE11 is working properly. So my development iteration was slow due to needing to use free tiers of online crossbrowser testing services
 
-- I'm very familliar with styled-components. with this project though i decided to try out emotion/css (the project has very little UI elements and would be ideal to test something new). I have to say it does work well and but i think i prefer styled-components more. styled-components is slightly more restrictive in writing, and that is something i actually prefer. it also makes the actual component layout look much cleaner than emotion/css. on the other hand, emotion/css is easier to interpolate dynamically and is platform-agnostic. perhaps it would be ideal to use emotion/css in very small projects then, except i'd probably opt to just use plain SASS/SCSS instead.
+- I'm very familliar with styled-components. with this project though i decided to try out emotion/css (the project has very little UI elements and would be ideal to test something new). I have to say it does work well and but i think i prefer styled-components more. styled-components is slightly more restrictive in writing, and that is something i actually prefer. it also makes the actual component layout look much cleaner than emotion/css. on the other hand, emotion/css is easier to interpolate dynamically and is platform-agnostic. perhaps it would be ideal to use emotion/css in very small projects then, except i'd probably opt to just use plain SASS/SCSS instead. You could still simply use styled through emotion, but i need to look into if the extra dependencies are worth it.
 
 ---
 
@@ -41,9 +41,9 @@
 - [x] Different layout for desktop view (as per wireframe)
 
 ### Future nice to haves
+- [x] animated background icons
 - [ ] Storybook components
 - [ ] Refactor existing unit tests and implement more
-- [ ] animated background icons
 - [ ] Only import needed icons from weather-icons
 - [ ] render city weather through SSR without forcing user through initial state
 - [ ] Refactor WeatherMachine into smaller actors
@@ -51,4 +51,7 @@
 - [ ] Dynamic youtube Video backgrounds based on weather
 - [ ] E2E testing
 - [ ] Visualize machine states
+
+### Pending issues
+- [ ] Scrolling icon background's speed and direction get stuck after completing a full cycle of all listed cities
 ...
