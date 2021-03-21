@@ -51,7 +51,7 @@
 - [x] Storybook components
 - [x] Refactor existing unit tests and implement more
 - [x] Remove weather icon font and only import needed icons as SVGs
-- [ ] Page insights testing
+- [x] Page insights testing
 - [~] Dynamic youtube Video backgrounds based on weather (Partially implemented, found out that there's a rather strict quota limit for the youtube api. i'll need to refactor a big portion of what i've already implemented to use a different API to get around this limitation,)
 - [ ] E2E testing
 - [ ] Visualize machine states

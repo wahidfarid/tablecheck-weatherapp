@@ -64,6 +64,7 @@ export const renderApp = (req: express.Request, res: express.Response) => {
         <meta charSet='utf-8' />
         <title>TableCheck Weather-app by Wahid</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="An interview task that consists of a weather application made with specific tools. Made by Wahid Farid for TableCheck"/>
         ${cssLinksFromAssets(assets, 'client')}
     </head>
     <body>
