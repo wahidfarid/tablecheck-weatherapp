@@ -83,7 +83,7 @@ const StyledAreaTitle = styled.h2`
   @media (min-width: 768px) {
     position: absolute;
     left: 0;
-    top: 0;
+    bottom: calc(100% - 5rem);
     width: 0;
     margin: 0;
     overflow: visible;
