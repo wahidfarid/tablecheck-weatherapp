@@ -1,9 +1,10 @@
-/** @jsx jsx */
-// eslint-disable-next-line no-use-before-define
 import React from 'react';
-import { css, jsx } from '@emotion/react';
 import styled from '@emotion/styled';
 
+import {
+  calculateBackgroundColorBasedOnTemprature,
+  calculateWindDirectionBasedOnDegree,
+} from './UIHelperFunctions';
 import { weatherMachineContext } from './machines/WeatherMachine';
 import weatherIconsMap from './weatherIconsMap';
 
@@ -16,16 +17,22 @@ type backgroundIconWrapperProps = {
   speed: number;
 };
 
-const containerStyle = css({
-  padding: '3rem',
-  height: '100%',
-  display: 'flex',
-  background: 'rgb(255, 205, 0)',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  boxDhadow: '0 0 20px rgba(0, 0, 0, 0.05) inset',
-  transition: 'all 1s',
+type StyledContainerProps = {
+  backgroundColor: string;
+};
+const StyledContainer = styled.div((props: StyledContainerProps) => {
+  return {
+    padding: '3rem',
+    height: '100%',
+    display: 'flex',
+    background: 'rgb(255, 205, 0)',
+    backgroundColor: props.backgroundColor,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    boxDhadow: '0 0 20px rgba(0, 0, 0, 0.05) inset',
+    transition: 'all 1s',
+  };
 });
 
 const BackgroundIconWrapper = styled.div`
@@ -56,7 +63,7 @@ const BackgroundIconWrapper = styled.div`
   left: -50%;
 `;
 
-const wrapperStyle = css({
+const StyledWrapper = styled.div({
   maxWidth: '700px',
   width: '100%',
   margin: '0 auto',
@@ -68,7 +75,7 @@ const wrapperStyle = css({
   position: 'relative',
 });
 
-const AreaTitleStyle = css`
+const StyledAreaTitle = styled.h2`
   font-size: 4rem;
   text-transform: uppercase;
   width: 100%;
@@ -83,7 +90,7 @@ const AreaTitleStyle = css`
   }
 `;
 
-const IconStyle = css`
+const StyledIcon = styled.i`
   font-size: 14rem;
   width: 100%;
   text-align: center;
@@ -93,7 +100,7 @@ const IconStyle = css`
   }
 `;
 
-const DividerStyle = css`
+const DividerComponent = styled.div`
   border-top: 1px solid #fff;
   width: 100%;
   margin-top: 4rem;
@@ -102,7 +109,7 @@ const DividerStyle = css`
   }
 `;
 
-const TempratureStyle = css`
+const StyledTempratureTitle = styled.h3`
   font-size: 10rem;
   margin: 0;
   @media (min-width: 768px) {
@@ -114,7 +121,7 @@ const TempratureStyle = css`
   }
 `;
 
-const minorWrapperStyle = css`
+const StyledMinorWrapper = styled.div`
   @media (min-width: 768px) {
     width: 33%;
     display: flex;
@@ -125,14 +132,7 @@ const minorWrapperStyle = css`
   }
 `;
 
-const minorIconStyles = css`
-  font-size: 4rem;
-  width: 4rem;
-  text-align: right;
-  margin: 0 2rem;
-`;
-
-const minorTitleStyles = css`
+const StyledMinorTitle = styled.h4`
   font-size: 4rem;
   margin: 0;
   @media (min-width: 768px) {
@@ -140,38 +140,12 @@ const minorTitleStyles = css`
   }
 `;
 
-const calculateBackgroundColorBasedOnTemprature = (temp: number = 0) => {
-  // Define color stop-points
-  const tenPercentDeepBlue = [4, 6, 14]; // 10c
-  const tenPercentLightBlue = [5, 15, 21]; // 20c
-  const tenPercentYellow = [25, 20, 0]; // 30c
-  const tenPercentRed = [19, 6, 4]; // 40c
-
-  // for a range of +-10c around temprature, create new color varation by building
-  // it ten percent for each degree in the range
-  const output = [0, 0, 0];
-  new Array(10).fill(0).forEach((_tenPercentDegree, index) => {
-    const i = temp - 5 + index;
-    let chosenColor = tenPercentDeepBlue;
-
-    if (i >= 15) chosenColor = tenPercentLightBlue;
-    if (i >= 25) chosenColor = tenPercentYellow;
-    if (i >= 35) chosenColor = tenPercentRed;
-
-    output[0] += chosenColor[0];
-    output[1] += chosenColor[1];
-    output[2] += chosenColor[2];
-  });
-
-  return 'rgb(' + output.join(',') + ');';
-};
-
-const calculateWindDirectionBasedOnDegree = (deg: number = 0) => {
-  const x = Math.cos(((deg - 90) * Math.PI) / 180);
-  const y = Math.sin(((deg - 90) * Math.PI) / 180);
-
-  return { xAxis: x * 5, yAxis: y * 5 };
-};
+const StyledMinorIcon = styled.i`
+  font-size: 4rem;
+  width: 4rem;
+  text-align: right;
+  margin: 0 2rem;
+`;
 
 type DisplayProps = {
   context: weatherMachineContext;
@@ -182,13 +156,10 @@ const DisplayComponent = ({ context }: DisplayProps) => {
   const icon: string = currentCity.data.icon!;
 
   return (
-    <div
-      css={css`
-        ${containerStyle};
-        background-color: ${calculateBackgroundColorBasedOnTemprature(
-          currentCity.data.temprature
-        )};
-      `}
+    <StyledContainer
+      backgroundColor={calculateBackgroundColorBasedOnTemprature(
+        currentCity.data.temprature
+      )}
     >
       <BackgroundIconWrapper
         icon={weatherIconsMap[icon]}
@@ -197,32 +168,26 @@ const DisplayComponent = ({ context }: DisplayProps) => {
         )}
         speed={currentCity.data.wind!}
       />
-      <div css={wrapperStyle}>
-        <h2 css={AreaTitleStyle}>{currentCity.data.name}</h2>
-        <i className={`wi ${weatherIconsMap[icon]}`} css={IconStyle}></i>
-        <div css={DividerStyle}></div>
-        <h3 css={TempratureStyle}>
+      <StyledWrapper>
+        <StyledAreaTitle>{currentCity.data.name}</StyledAreaTitle>
+        <StyledIcon className={`wi ${weatherIconsMap[icon]}`}></StyledIcon>
+        <DividerComponent />
+        <StyledTempratureTitle>
           {Math.round(currentCity.data.temprature || 0)}°
-        </h3>
-        <div css={minorWrapperStyle}>
-          <h4 css={minorTitleStyles}>
-            <i css={minorIconStyles} className="wi wi-raindrop"></i>
+        </StyledTempratureTitle>
+        <StyledMinorWrapper>
+          <StyledMinorTitle>
+            <StyledMinorIcon className="wi wi-raindrop"></StyledMinorIcon>
             {currentCity.data.humidity} %
-          </h4>
-          <h4 css={minorTitleStyles}>
-            <i css={minorIconStyles} className="wi wi-strong-wind"></i>
+          </StyledMinorTitle>
+          <StyledMinorTitle>
+            <StyledMinorIcon className="wi wi-strong-wind"></StyledMinorIcon>
             {currentCity.data.wind}{' '}
-            <span
-              css={css`
-                font-size: 2rem;
-              `}
-            >
-              km/h
-            </span>
-          </h4>
-        </div>
-      </div>
-    </div>
+            <span style={{ fontSize: '2rem' }}>km/h</span>
+          </StyledMinorTitle>
+        </StyledMinorWrapper>
+      </StyledWrapper>
+    </StyledContainer>
   );
 };
 

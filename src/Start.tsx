@@ -1,9 +1,7 @@
-/** @jsx jsx */
-// eslint-disable-next-line no-use-before-define
 import React from 'react';
-import { css, jsx } from '@emotion/react';
+import styled from '@emotion/styled';
 
-const containerStyle = css({
+const ContainerStyle = styled.div({
   maxWidth: '700px',
   padding: '20px',
   margin: '0 auto',
@@ -16,17 +14,17 @@ const containerStyle = css({
 
 const StartComponent = () => (
   <div
-    css={css`
-      background: rgb(50, 150, 210);
-      height: 100%;
-    `}
+    style={{
+      background: 'rgb(50, 150, 210)',
+      height: '100%',
+    }}
   >
-    <div css={containerStyle}>
+    <ContainerStyle>
       <svg
-        css={css`
-          max-width: 200px;
-          width: 50%;
-        `}
+        style={{
+          maxWidth: '200px',
+          width: '50%',
+        }}
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -46,14 +44,14 @@ const StartComponent = () => (
         ></path>
       </svg>
       <h1
-        css={css`
-          text-align: center;
-        `}
+        style={{
+          textAlign: 'center',
+        }}
       >
         Please enable location services to get the current weather for your
         location
       </h1>
-    </div>
+    </ContainerStyle>
   </div>
 );
 
