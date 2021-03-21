@@ -22,16 +22,19 @@ type StyledContainerProps = {
 };
 const StyledContainer = styled.div((props: StyledContainerProps) => {
   return {
-    padding: '3rem',
     height: '100%',
+    width: '100%',
+    maxWidth: '100vw',
     display: 'flex',
     background: 'rgb(255, 205, 0)',
     backgroundColor: props.backgroundColor,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    boxDhadow: '0 0 20px rgba(0, 0, 0, 0.05) inset',
+    boxshadow: '0 0 20px rgba(0, 0, 0, 0.1) inset',
     transition: 'all 1s',
+    overflow: 'hidden',
+    position: 'relative',
   };
 });
 
@@ -64,7 +67,8 @@ const BackgroundIconWrapper = styled.div`
 `;
 
 const StyledWrapper = styled.div({
-  maxWidth: '700px',
+  padding: '3rem',
+  maxWidth: '730px',
   width: '100%',
   margin: '0 auto',
   display: 'flex',
@@ -90,13 +94,15 @@ const StyledAreaTitle = styled.h2`
   }
 `;
 
-const StyledIcon = styled.i`
-  font-size: 14rem;
-  width: 100%;
-  text-align: center;
+const StyledIconImage = styled.img`
+  width: 22rem;
+  height: 22rem;
+  margin: -3rem auto;
+  filter: invert(100%) saturate(100%);
   @media (min-width: 768px) {
-    width: 33%;
-    font-size: 20rem;
+    width: 30rem;
+    height: 30rem;
+    margin: -5rem;
   }
 `;
 
@@ -140,11 +146,11 @@ const StyledMinorTitle = styled.h4`
   }
 `;
 
-const StyledMinorIcon = styled.i`
-  font-size: 4rem;
-  width: 4rem;
-  text-align: right;
-  margin: 0 2rem;
+const StyledMinorIconImage = styled.img`
+  width: 6rem;
+  height: 6rem;
+  margin-bottom: -1.5rem;
+  filter: invert(100%) saturate(100%);
 `;
 
 type DisplayProps = {
@@ -170,18 +176,21 @@ const DisplayComponent = ({ context }: DisplayProps) => {
       />
       <StyledWrapper>
         <StyledAreaTitle>{currentCity.data.name}</StyledAreaTitle>
-        <StyledIcon className={`wi ${weatherIconsMap[icon]}`}></StyledIcon>
+        <StyledIconImage
+          src={`/weather-icons/${weatherIconsMap[icon]}.svg`}
+          alt={weatherIconsMap[icon]}
+        />
         <DividerComponent />
         <StyledTempratureTitle>
           {Math.round(currentCity.data.temprature || 0)}°
         </StyledTempratureTitle>
         <StyledMinorWrapper>
           <StyledMinorTitle>
-            <StyledMinorIcon className="wi wi-raindrop"></StyledMinorIcon>
+            <StyledMinorIconImage src={'weather-icons/wi-raindrop.svg'} />
             {currentCity.data.humidity} %
           </StyledMinorTitle>
           <StyledMinorTitle>
-            <StyledMinorIcon className="wi wi-strong-wind"></StyledMinorIcon>
+            <StyledMinorIconImage src={'weather-icons/wi-strong-wind.svg'} />
             {currentCity.data.wind}{' '}
             <span style={{ fontSize: '2rem' }}>km/h</span>
           </StyledMinorTitle>

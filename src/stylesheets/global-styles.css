@@ -3,8 +3,6 @@
 @import 'normalize.css';
 /* Import font */
 @import 'font-league-gothic.css';
-/* Import weather icon fonrs */
-@import '../assets/weather-icons/css/weather-icons.min.css';
 
 /* Basic global styling */
 html{
@@ -16,12 +14,14 @@ html{
   overflow-y: hidden;
   min-height: 100vh;
   height: 100%;
+  max-width: 100vw;
 }
 body{
   font-size: 2.2rem;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  max-width: 100vw;
   height: 100%;
   min-height: 100vh;
   color: #fff;
@@ -30,6 +30,9 @@ body{
 #root{
   min-height: 100vh;
   height: 100%;
+  width: 100vw;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 h1,h2,h3,h4,h5,h6{
