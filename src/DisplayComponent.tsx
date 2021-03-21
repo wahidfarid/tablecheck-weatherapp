@@ -31,7 +31,7 @@ const StyledContainer = styled.div((props: StyledContainerProps) => {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    boxshadow: '0 0 20px rgba(0, 0, 0, 0.1) inset',
+    boxShadow: '0 0 20px rgba(0, 0, 0, 0.1) inset',
     transition: 'all 1s',
     overflow: 'hidden',
     position: 'relative',

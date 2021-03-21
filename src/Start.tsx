@@ -17,6 +17,7 @@ const StartComponent = () => (
     style={{
       background: 'rgb(50, 150, 210)',
       height: '100%',
+      boxShadow: '0 0 20px rgba(0, 0, 0, 0.1) inset',
     }}
   >
     <ContainerStyle>
