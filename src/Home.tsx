@@ -21,12 +21,14 @@ const Home = () => {
       }),
     });
 
-  let outputComponent = <StartComponent />;
+  let outputComponent = <div></div>;
   if (
     current.context.cities.length > 0 &&
     current.context.cities[current.context.currentCityIndex].data?.name
   ) {
     outputComponent = <DisplayComponent context={current.context} />;
+  } else {
+    if (current.matches('geolocation')) outputComponent = <StartComponent />;
   }
 
   return outputComponent;

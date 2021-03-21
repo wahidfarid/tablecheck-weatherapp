@@ -51,7 +51,6 @@
 - [x] Storybook components
 - [x] Refactor existing unit tests and implement more
 - [x] Remove weather icon font and only import needed icons as SVGs
-- [ ] render city weather through SSR without forcing user through initial state
 - [ ] Refactor WeatherMachine into smaller actors
 - [ ] Page insights testing
 - [ ] Dynamic youtube Video backgrounds based on weather
