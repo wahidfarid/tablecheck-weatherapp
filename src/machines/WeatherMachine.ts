@@ -1,6 +1,8 @@
 import { assign, Machine as machine } from 'xstate';
 import Axios from 'axios';
 
+// import BackgroundMachine from './BackgroundMachine';
+
 const serializeWeatherAPIRequests = (
   cities: weatherMachineCity[]
 ): Promise<any> => {
@@ -17,7 +19,7 @@ const serializeWeatherAPIRequests = (
   return Promise.all(listOfWeatherPromises);
 };
 
-interface weatherMachineCity {
+export interface weatherMachineCity {
   coords: { lat: number; lng: number };
   name?: string;
   data: {
@@ -57,7 +59,7 @@ export const WeatherMachine = machine<weatherMachineContext>(
           src: 'getLocation',
           onDone: {
             target: 'query',
-            actions: assign((context, event) => event.data),
+            actions: [assign((context, event) => event.data)],
           },
           onError: {
             target: 'geolocation',
@@ -69,10 +71,21 @@ export const WeatherMachine = machine<weatherMachineContext>(
         invoke: {
           src: 'getData',
           onDone: {
-            target: 'display',
+            target: 'checkVideo',
             actions: assign({ cities: (context, event) => event.data }),
           },
         },
+      },
+      checkVideo: {
+        on: {
+          '': 'display',
+        },
+        // invoke: {
+        //   id: 'background',
+        //   src: BackgroundMachine,
+        //   data: { cities: (context: weatherMachineContext) => context.cities },
+        //   onDone: 'display',
+        // },
       },
       display: {
         invoke: [
