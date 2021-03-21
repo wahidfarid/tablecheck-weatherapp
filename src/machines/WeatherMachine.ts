@@ -125,21 +125,28 @@ export const WeatherMachine = machine<weatherMachineContext>(
 
           const weatherResponses = Promise.all(listOfWeatherPromises);
 
-          weatherResponses.then((response) => {
-            const updatedCities = context.cities.map((city, index) => {
-              const data = {
-                temprature: response[index].data.main.temp,
-                humidity: response[index].data.main.humidity,
-                name: response[index].data.name,
-                wind: response[index].data.wind.speed,
-                icon: response[index].data.weather[0].icon,
-                deg: response[index].data.wind.deg,
-              };
-              return { ...city, data };
-            });
+          weatherResponses
+            .then((response) => {
+              const updatedCities = context.cities.map((city, index) => {
+                const data = {
+                  temprature: response[index].data.main.temp,
+                  humidity: response[index].data.main.humidity,
+                  name: response[index].data.name,
+                  wind: response[index].data.wind.speed,
+                  icon: response[index].data.weather[0].icon,
+                  deg: response[index].data.wind.deg,
+                };
+                return { ...city, data };
+              });
 
-            resolve(updatedCities);
-          });
+              resolve(updatedCities);
+            })
+            .catch((error) => {
+              console.error(error);
+              alert(
+                'There was a problem while requesting weather information. Please confirm the name of the city and make sure you have a valid internet connecion'
+              );
+            });
         }),
       startTimer: (context, event) => (cb) => {
         const interval = setInterval(() => {
