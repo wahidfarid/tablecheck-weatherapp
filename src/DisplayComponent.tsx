@@ -186,11 +186,11 @@ const DisplayComponent = ({ context }: DisplayProps) => {
         </StyledTempratureTitle>
         <StyledMinorWrapper>
           <StyledMinorTitle>
-            <StyledMinorIconImage src={'weather-icons/wi-raindrop.svg'} />
+            <StyledMinorIconImage src={'/weather-icons/wi-raindrop.svg'} />
             {currentCity.data.humidity} %
           </StyledMinorTitle>
           <StyledMinorTitle>
-            <StyledMinorIconImage src={'weather-icons/wi-strong-wind.svg'} />
+            <StyledMinorIconImage src={'/weather-icons/wi-strong-wind.svg'} />
             {currentCity.data.wind}{' '}
             <span style={{ fontSize: '2rem' }}>km/h</span>
           </StyledMinorTitle>

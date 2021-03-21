@@ -14,6 +14,7 @@
         { "src": "/favicon.ico", "dest": "build/public/favicon.ico" },
         { "src": "/robots.txt", "dest": "build/public/robots.txt" },
         { "src": "/static/(.*)", "dest": "build/public/static/$1" },
+        { "src": "/weather-icons/(.*)", "dest": "build/public/weather-icons/$1" },
         { "src": "/(.*)", "dest": "build/server.js" }
     ]
 }
