@@ -10,7 +10,7 @@
 
 - I've lost quite a bit of time to setting up Razzle (apparently it doesn't support the latest v15. i could only get it working properly with LTS v14), and getting used to XState (especially unit testing it). i'm familliar with redux however i was intrigued about XState since it was mentioned in the interview and decided to try it for this task.
 
-- XState's react hooks don't want to play nicely with enzyme, it seems I have to jump through a bunch of loops to get it to work without raising any errors
+- XState's react hooks don't want to play nicely with enzyme. It's hooks fail in an SSR environment. The generally recommended approach for hooks in this case is to override them or skip them when the code detects there is no browser available. However, i've attempted this with XState and it seems that the bit i need to override is deeper in the library. i opted to not edit the actual package and work around the issue. I test the machines exclusively through an interpreter and not through the react components.
 
 - The bulk of my previous experience was with [Tyro-app](https://tyro-app.com) which had videoconferencing done over websockets and WebRTC. That means that it was a requirement for our users to have recent versions of their browsers, or in some cases completely avoid certain browsers such as IE/Edge as they did not support WebRTC. That means i didn't have a lot of experience with transpiling and polyfilling JS. It took me quite a bit of time and effort to get it working here, especially because i've stopped using Windows and wasn't going to dual-boot or run a VM just to confirm IE11 is working properly. So my development iteration was slow due to needing to use free tiers of online crossbrowser testing services
 
@@ -19,6 +19,8 @@
 - This project essentially boils down to two components (not counting state management/machines). A screen for the initial state, and a screen to display weather information (that cycles into itself). Typically i like to avoid excessive segmentation of components and files and keep things in as few files as possible while keeping things DRY. If at any time i catch myself reusing code or copy/pasting stuff internally, that is a sign i should extract that into it's own reusable piece of code. That being said, the scale of this project wasn't big enough for me to find many signs like that 😅 So i'm left conflicted about having just two active components, or needlessly dividing them into more parts that may be slightly more confusing
 
 - I have not used Storybook before, but i've had such a positive experience with it through this project. While i'm sure there's a lot about it I have yet to learn, I can see how usefull it would be for bridging the gap between developers and designers, sticking to a style guide and last but not least would make UI Regression testing a lot easier than it typically is.
+
+- Regarding Unit Tests, i've been having difficulty actually testing the components. the issue being the components are few and dead simple. They just display data and are not interactable in any way. all of the logic behind the project resides in the actual state machine. I've implemented unit tests for the machine, no problem. The components being almost essentially static, not to mention being able to check UI issues at a glance through Storybook, lead me to think there's not much use writing any meaningful tests for them in their current state
 
 ---
 
