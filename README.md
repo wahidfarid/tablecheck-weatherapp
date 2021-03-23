@@ -102,6 +102,5 @@ simply clone the project, run `npm install` and you should be good to go! (and s
 
 ### Pending issues
 - Scrolling icon background's speed and direction get stuck after completing a full cycle of all listed cities
-- Scrolling icon background recenters every 5 seconds so as not to expose plain background. this is un-noticable while cycling through cities but obvious with only one city. should implement a way to seamlessly center the background while in view... Issue is caused by unequal momentum between the x and y axis while scrolling. easiest solution i think is to limit the scrolling directions to 8. that way when the pattern recenters itself, it should perfectly overlap and not "jump" 
 - Importing the global styles in Storybook's `preview.js` or `preview-head.html` does not display the component properly for some reason? for the time being, importing the global styles inside each component story seems to properly display everything
 ...

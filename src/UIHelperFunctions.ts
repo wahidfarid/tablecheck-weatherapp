@@ -1,3 +1,7 @@
+type singleDirectionEnum = {
+  [key: string]: [number, number];
+};
+
 export const calculateBackgroundColorBasedOnTemprature = (temp: number = 0) => {
   // Define color stop-points
   const tenPercentDeepBlue = [4, 6, 14]; // 10c
@@ -25,8 +29,21 @@ export const calculateBackgroundColorBasedOnTemprature = (temp: number = 0) => {
 };
 
 export const calculateWindDirectionBasedOnDegree = (deg: number = 0) => {
-  const x = Math.cos(((deg - 90) * Math.PI) / 180);
-  const y = Math.sin(((deg - 90) * Math.PI) / 180);
+  const directionEnum: singleDirectionEnum = {
+    0: [0, -1],
+    1: [1, -1],
+    2: [1, 0],
+    3: [1, 1],
+    4: [0, 1],
+    5: [-1, 1],
+    6: [-1, 0],
+    7: [-1, -1],
+  };
 
-  return { xAxis: x * 5, yAxis: y * 5 };
+  const enumKey = Math.floor((deg - 22.5) / 45);
+
+  return {
+    xAxis: directionEnum[enumKey][0] * 5,
+    yAxis: directionEnum[enumKey][1] * 5,
+  };
 };
