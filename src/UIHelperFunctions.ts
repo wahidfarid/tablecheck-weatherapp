@@ -40,8 +40,7 @@ export const calculateWindDirectionBasedOnDegree = (deg: number = 0) => {
     7: [-1, -1],
   };
 
-  const enumKey = Math.floor((deg - 22.5) / 45);
-
+  const enumKey = Math.floor(Math.max(deg - 22.5, 0) / 45);
   return {
     xAxis: directionEnum[enumKey][0] * 5,
     yAxis: directionEnum[enumKey][1] * 5,
