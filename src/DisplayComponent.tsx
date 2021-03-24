@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import {
-  calculateBackgroundColorBasedOnTemprature,
+  calculateBackgroundColorBasedOntemperature,
   calculateWindDirectionBasedOnDegree,
 } from './UIHelperFunctions';
 import { weatherMachineContext } from './machines/WeatherMachine';
@@ -115,7 +115,7 @@ const DividerComponent = styled.div`
   }
 `;
 
-const StyledTempratureTitle = styled.h3`
+const StyledtemperatureTitle = styled.h3`
   font-size: 10rem;
   margin: 0;
   @media (min-width: 768px) {
@@ -163,8 +163,8 @@ const DisplayComponent = ({ context }: DisplayProps) => {
 
   return (
     <StyledContainer
-      backgroundColor={calculateBackgroundColorBasedOnTemprature(
-        currentCity.data.temprature
+      backgroundColor={calculateBackgroundColorBasedOntemperature(
+        currentCity.data.temperature
       )}
     >
       <BackgroundIconWrapper
@@ -181,9 +181,9 @@ const DisplayComponent = ({ context }: DisplayProps) => {
           alt={weatherIconsMap[icon]}
         />
         <DividerComponent />
-        <StyledTempratureTitle>
-          {Math.round(currentCity.data.temprature || 0)}°
-        </StyledTempratureTitle>
+        <StyledtemperatureTitle>
+          {Math.round(currentCity.data.temperature || 0)}°
+        </StyledtemperatureTitle>
         <StyledMinorWrapper>
           <StyledMinorTitle>
             <StyledMinorIconImage

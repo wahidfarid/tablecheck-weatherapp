@@ -1,4 +1,4 @@
-import { Machine as machine, assign } from 'xstate';
+import { createMachine, assign } from 'xstate';
 import axios, { AxiosResponse } from 'axios';
 
 import { weatherMachineCity } from './WeatherMachine';
@@ -43,20 +43,20 @@ type BackgroundMachineContext = {
   videos: any[];
 };
 
-export const BackgroundMachine = machine<BackgroundMachineContext>(
+export const backgroundMachine = createMachine<BackgroundMachineContext>(
   {
     id: 'background',
-    initial: 'gettingYoutubeData',
+    initial: 'loading',
     context: {
       cities: [],
       videos: [],
     },
     states: {
-      gettingYoutubeData: {
+      loading: {
         invoke: {
           src: 'requestYoutubeData',
           onDone: {
-            target: 'filterYoutubeData',
+            target: 'loaded',
             actions: assign({
               videos: (context, event: any) => {
                 return event.data;
@@ -65,7 +65,7 @@ export const BackgroundMachine = machine<BackgroundMachineContext>(
           },
         },
       },
-      filterYoutubeData: {
+      loaded: {
         invoke: {
           src: 'processYoutubeData',
           onDone: 'processed',
@@ -129,5 +129,3 @@ export const BackgroundMachine = machine<BackgroundMachineContext>(
     },
   }
 );
-
-export default BackgroundMachine;

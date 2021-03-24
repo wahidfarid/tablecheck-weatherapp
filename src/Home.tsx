@@ -1,37 +1,38 @@
 import React from 'react';
 import { useMachine } from '@xstate/react';
 import { useLocation } from 'react-router-dom';
+import qs from 'query-string';
 
-import WeatherMachine from './machines/WeatherMachine';
-import StartComponent from './Start';
+import { weatherMachine } from './machines/WeatherMachine';
+import { RequiresLocation } from './RequiresLocation';
 import DisplayComponent from './DisplayComponent';
 
 const Home = () => {
-  // Machine hooks
-  const [current, send] = useMachine(WeatherMachine);
+  const { search } = useLocation();
+  const { cities: rawCitiesParam = '' } = qs.parse(search);
+  const cities = rawCitiesParam
+    .split(',')
+    .filter((str) => str.length > 0)
+    .map((name) => ({ name }));
+  const [state] = useMachine(
+    weatherMachine.withContext({ cities, currentCityIndex: 0 })
+  );
 
-  // Determine if machine should use geolocation or city names
-  const searchParams = new URLSearchParams(useLocation().search).get('city');
-
-  if (!searchParams) send('GEOLOCATION');
-  else
-    send('QUERY', {
-      cities: searchParams.split(',').map((name) => {
-        return { name };
-      }),
-    });
-
-  let outputComponent = <div></div>;
-  if (
-    current.context.cities.length > 0 &&
-    current.context.cities[current.context.currentCityIndex].data?.name
-  ) {
-    outputComponent = <DisplayComponent context={current.context} />;
-  } else {
-    if (current.matches('geolocation')) outputComponent = <StartComponent />;
+  if (['init', 'loading'].some(state.matches)) {
+    return <span>loading...</span>;
   }
 
-  return outputComponent;
+  if (state.matches('loaded')) {
+    return <DisplayComponent context={state.context} />;
+  }
+
+  if (['gettingLocation', 'locationRefused'].some(state.matches)) {
+    return <RequiresLocation />;
+  }
+
+  if (state.matches('error')) {
+    return <span>data error</span>;
+  }
 };
 
 export default Home;

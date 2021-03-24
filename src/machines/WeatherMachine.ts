@@ -1,137 +1,127 @@
-import { assign, Machine as machine } from 'xstate';
+import { assign, createMachine } from 'xstate';
 import Axios from 'axios';
 
-// import BackgroundMachine from './BackgroundMachine';
+// import { backgroundMachine } from './BackgroundMachine';
 
 const serializeWeatherAPIRequests = (
   cities: weatherMachineCity[]
 ): Promise<any> => {
-  let url = '';
-  const listOfWeatherPromises = cities.map((city) => {
-    if (!city.name)
-      url = `https://api.openweathermap.org/data/2.5/weather?lat=${city.coords.lat}&lon=${city.coords.lng}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
-    else {
-      url = `https://api.openweathermap.org/data/2.5/weather?q=${city.name}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
-    }
+  return Promise.all(
+    cities.map(({ coords, name }) => {
+      let url = '';
+      if (!name)
+        url = `https://api.openweathermap.org/data/2.5/weather?lat=${coords.latitude}&lon=${coords.longitude}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
+      else {
+        url = `https://api.openweathermap.org/data/2.5/weather?q=${name}&appid=${process.env.RAZZLE_WEATHER_API_KEY}&units=metric`;
+      }
 
-    return Axios.get(url);
-  });
-  return Promise.all(listOfWeatherPromises);
+      return Axios.get(url);
+    })
+  );
 };
 
 export interface weatherMachineCity {
-  coords: { lat: number; lng: number };
+  coords?: { latidude: number; longitude: number };
   name?: string;
-  data: {
-    name?: string;
-    temprature?: number;
-    humidity?: number;
-    wind?: number;
-    icon?: string;
-    deg?: number;
-  };
+  temperature?: number;
+  humidity?: number;
+  wind?: number;
+  icon?: string;
+  deg?: number;
 }
+
 export interface weatherMachineContext {
   cities: weatherMachineCity[];
   currentCityIndex: number;
 }
 
-export const WeatherMachine = machine<weatherMachineContext>(
+export const weatherMachine = createMachine<weatherMachineContext>(
   {
     id: 'weather',
-    initial: 'start',
+    initial: 'init',
     context: {
       cities: [],
       currentCityIndex: 0,
     },
     states: {
-      start: {
-        on: {
-          GEOLOCATION: 'geolocation',
-          QUERY: {
-            target: 'query',
-            actions: assign({ cities: (context, event) => event.cities }),
+      init: {
+        always: [
+          {
+            target: 'loading',
+            cond: 'hasCities',
           },
-        },
+          {
+            target: 'gettingLocation',
+            cond: 'shouldGetLocation',
+          },
+        ],
       },
-      geolocation: {
+      gettingLocation: {
         invoke: {
           src: 'getLocation',
           onDone: {
-            target: 'query',
-            actions: [assign((context, event) => event.data)],
+            target: 'loading',
+            actions: assign({
+              cities: (_, { data }) => data,
+            }),
           },
-          onError: {
-            target: 'geolocation',
-            actions: (context, event) => alert(event.data),
-          },
+          onError: 'locationRefused',
         },
       },
-      query: {
+      locationRefused: {},
+      loading: {
         invoke: {
           src: 'getData',
           onDone: {
-            target: 'display', // temporarily automatically transition to the next state until the youtube api fix
+            target: 'loaded', // temporarily automatically transition to the next state until the youtube api fix
             actions: assign({ cities: (context, event) => event.data }),
           },
+          onError: 'error',
         },
       },
       // checkVideo: {
       //   on: {
-      //     '': 'display',
+      //     '': 'loaded',
       //   },
       // invoke: {
       //   id: 'background',
       //   src: BackgroundMachine,
       //   data: { cities: (context: weatherMachineContext) => context.cities },
-      //   onDone: 'display',
+      //   onDone: 'loaded',
       // },
       // },
-      display: {
+      loaded: {
         invoke: [
           {
-            src: 'startTimer',
+            src: 'startDataRefreshTimer',
           },
           {
             src: 'cycleCities',
           },
         ],
         on: {
-          TICK: 'query',
-          CYCLE: {
-            internal: true,
-            actions: assign((context, _event) => {
-              context.currentCityIndex++;
-              context.currentCityIndex =
-                context.currentCityIndex % context.cities.length;
-              return context;
-            }),
+          REFRESH_DATA: 'loading',
+          CYCLE_TO_NEXT_CITY: {
+            cond: 'canCycleCities',
+            actions: ['incrementCurrentCityIndex'],
           },
         },
       },
+      error: {},
     },
   },
   {
+    guards: {
+      shouldGetLocation: ({ cities }) => cities.length === 0,
+      hasCities: ({ cities }) => cities.length > 0,
+      canCycleCities: ({ cities }) => cities.length > 1,
+    },
     services: {
       getLocation: (context, event) =>
-        new Promise((resolve) => {
+        new Promise((resolve, reject) => {
           global.navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const newCity = {
-                coords: {
-                  lat: position.coords.latitude,
-                  lng: position.coords.longitude,
-                },
-                data: {},
-              };
-
-              const newContext = context;
-              newContext.cities = [newCity];
-              resolve(newContext);
-            },
-            (error) => {
-              console.error(error);
-            },
+            ({ coords }) => resolve([{ coords }]),
+            reject,
             {
               enableHighAccuracy: false,
               maximumAge: 50000,
@@ -139,17 +129,15 @@ export const WeatherMachine = machine<weatherMachineContext>(
           );
         }),
 
-      getData: (context, event) =>
-        new Promise((resolve) => {
-          // Serialize weather api request promises
-          const weatherResponses = serializeWeatherAPIRequests(context.cities);
+      getData: ({ cities }, event) =>
+        new Promise((resolve, reject) => {
+          const weatherResponses = serializeWeatherAPIRequests(cities);
 
-          // Once all of them are done, iterate on responses and return values to be assigned to context
           weatherResponses
             .then((response) => {
-              const updatedCities = context.cities.map((city, index) => {
+              const updatedCities = cities.map((city, index) => {
                 const data = {
-                  temprature: response[index].data.main.temp,
+                  temperature: response[index].data.main.temp,
                   humidity: response[index].data.main.humidity,
                   name: response[index].data.name,
                   wind: response[index].data.wind.speed,
@@ -161,16 +149,11 @@ export const WeatherMachine = machine<weatherMachineContext>(
 
               resolve(updatedCities);
             })
-            .catch((error) => {
-              console.error(error);
-              alert(
-                'There was a problem while requesting weather information. Please confirm the name of the city and make sure you have a valid internet connecion'
-              );
-            });
+            .catch(reject);
         }),
-      startTimer: (context, event) => (cb) => {
+      startDataRefreshTimer: (context, event) => (cb) => {
         const interval = setInterval(() => {
-          cb('TICK');
+          cb('REFRESH_DATA');
         }, 1000 * 60 * 5);
         return () => {
           clearInterval(interval);
@@ -178,14 +161,19 @@ export const WeatherMachine = machine<weatherMachineContext>(
       },
       cycleCities: (context, event) => (cb) => {
         const interval = setInterval(() => {
-          cb('CYCLE');
+          cb('CYCLE_TO_NEXT_CITY');
         }, 5000);
         return () => {
           clearInterval(interval);
         };
       },
     },
+    actions: {
+      incrementCurrentCityIndex: assign({
+        currentCityIndex: ({ cities, currentCityIndex }) => {
+          return cities[currentCityIndex + 1] ? currentCityIndex + 1 : 0;
+        },
+      }),
+    },
   }
 );
-
-export default WeatherMachine;

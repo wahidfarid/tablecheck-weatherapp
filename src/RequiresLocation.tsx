@@ -12,7 +12,7 @@ const ContainerStyle = styled.div({
   alignItems: 'center',
 });
 
-const StartComponent = () => (
+export const RequiresLocation = () => (
   <div
     style={{
       background: 'rgb(50, 150, 210)',
@@ -55,5 +55,3 @@ const StartComponent = () => (
     </ContainerStyle>
   </div>
 );
-
-export default StartComponent;
