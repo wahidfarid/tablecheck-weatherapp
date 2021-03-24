@@ -13,62 +13,62 @@ export default {
 const multipleCities: weatherMachineContext = {
   cities: [
     {
-      coords: { lat: 0, lng: 0 },
+      coords: { latitude: 0, longitude: 0 },
       name: 'texas',
       data: {
         deg: 170,
         humidity: 76,
         icon: '02n',
         name: 'Texas',
-        temprature: 15,
+        temperature: 15,
         wind: 4.12,
       },
     },
     {
-      coords: { lat: 0, lng: 0 },
+      coords: { latitude: 0, longitude: 0 },
       name: 'cairo',
       data: {
         deg: 320,
         humidity: 37,
         icon: '50d',
         name: 'Cairo',
-        temprature: 30,
+        temperature: 30,
         wind: 2,
       },
     },
     {
-      coords: { lat: 0, lng: 0 },
+      coords: { latitude: 0, longitude: 0 },
       name: 'berlin',
       data: {
         deg: 310,
         humidity: 62,
         icon: '04n',
         name: 'Berlin',
-        temprature: 2,
+        temperature: 2,
         wind: 16,
       },
     },
     {
-      coords: { lat: 0, lng: 0 },
+      coords: { latitude: 0, longitude: 0 },
       name: 'tokyo',
       data: {
         deg: 200,
         humidity: 94,
         icon: '50n',
         name: 'Tokyo',
-        temprature: 22,
+        temperature: 22,
         wind: 7,
       },
     },
     {
-      coords: { lat: 0, lng: 0 },
+      coords: { latitude: 0, longitude: 0 },
       name: 'dubai',
       data: {
         deg: 280,
         humidity: 34,
         icon: '01d',
         name: 'Dubai',
-        temprature: 45,
+        temperature: 45,
         wind: 5,
       },
     },
@@ -79,14 +79,14 @@ const multipleCities: weatherMachineContext = {
 const singleCity: weatherMachineContext = {
   cities: [
     {
-      coords: { lat: 0, lng: 0 },
+      coords: { latitude: 0, longitude: 0 },
       name: 'tokyo',
       data: {
         deg: 200,
         humidity: 94,
         icon: '50n',
         name: 'Tokyo',
-        temprature: 7.35,
+        temperature: 7.35,
         wind: 4.12,
       },
     },

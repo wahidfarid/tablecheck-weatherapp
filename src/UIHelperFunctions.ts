@@ -2,14 +2,14 @@ type singleDirectionEnum = {
   [key: string]: [number, number];
 };
 
-export const calculateBackgroundColorBasedOnTemprature = (temp: number = 0) => {
+export const calculateBackgroundColorBasedOntemperature = (temp: number = 0) => {
   // Define color stop-points
   const tenPercentDeepBlue = [4, 6, 14]; // 10c
   const tenPercentLightBlue = [5, 15, 21]; // 20c
   const tenPercentYellow = [25, 20, 0]; // 30c
   const tenPercentRed = [19, 6, 4]; // 40c
 
-  // for a range of +-10c around temprature, create new color varation by building
+  // for a range of +-10c around temperature, create new color varation by building
   // it ten percent for each degree in the range
   const output = [0, 0, 0];
   new Array(10).fill(0).forEach((_tenPercentDegree, index) => {
